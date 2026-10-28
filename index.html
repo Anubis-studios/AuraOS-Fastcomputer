@@ -2,205 +2,188 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AuraOS Nexus v7.0 - AAS Core</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AuraOS v8.0 - Rotation Engine</title>
 <meta name="theme-color" content="#FFD700">
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html, body { width: 100%; height: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif; }
+/* ==========================================
+   AURAOS v8.0 - GOLD & BLACK SUPERCOMPUTER
+   ========================================== */
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { width: 100%; height: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif; background: #000; color: #fff; }
+
 :root {
   --gold: #FFD700; --gold-dim: #B8860B; --gold-light: #FFE55C;
-  --black: #0a0a0a; --dark: #1a1a1a; --glass: rgba(20,20,20,0.92);
+  --black: #0a0a0a; --dark: #1a1a1a; --glass: rgba(20,20,20,0.85);
   --text: #ffffff; --text-muted: #888888; --success: #28c840; --error: #ff5f57;
 }
 
 /* BOOT SCREEN */
-#boot-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--black); z-index: 100000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-.boot-logo { width: 180px; height: 180px; background: linear-gradient(135deg, var(--gold), var(--gold-dim)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 90px; box-shadow: 0 0 60px var(--gold); animation: pulse 2s infinite; margin-bottom: 40px; }
-@keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-.boot-text { color: var(--gold); font-size: 24px; margin-bottom: 30px; letter-spacing: 3px; }
-.boot-bar-container { width: 350px; height: 4px; background: #333; border-radius: 2px; overflow: hidden; }
-.boot-bar { height: 100%; width: 0%; background: var(--gold); transition: width 0.3s; }
+#boot-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--black); z-index: 100000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.8s; }
+.boot-logo { width: 120px; height: 120px; background: linear-gradient(135deg, var(--gold), var(--gold-dim)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 60px; box-shadow: 0 0 50px rgba(255,215,0,0.4); animation: pulse 2s infinite; margin-bottom: 30px; }
+@keyframes pulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.9; } }
+.boot-text { color: var(--gold); font-size: 18px; margin-bottom: 20px; letter-spacing: 2px; font-weight: 300; }
+.boot-bar { width: 250px; height: 3px; background: #222; border-radius: 2px; overflow: hidden; }
+.boot-bar-fill { height: 100%; width: 0%; background: var(--gold); transition: width 0.1s; box-shadow: 0 0 10px var(--gold); }
 
 /* DESKTOP */
-#desktop { width: 100%; height: 100%; position: relative; background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0a 100%); overflow: hidden; }
-.matrix-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.15; pointer-events: none; }
+#desktop { width: 100%; height: 100%; position: relative; background: radial-gradient(ellipse at center, #1a1a2e 0%, #050505 100%); overflow: hidden; }
+#matrix { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.12; pointer-events: none; }
 
 /* MENU BAR */
-#menu-bar { position: fixed; top: 0; left: 0; width: 100%; height: 32px; background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,215,0,0.3); display: flex; align-items: center; padding: 0 16px; z-index: 9000; font-size: 13px; color: var(--text); }
-.menu-apple { font-size: 18px; margin-right: 20px; cursor: pointer; color: var(--gold); }
-.menu-item { padding: 2px 10px; border-radius: 4px; cursor: pointer; margin-right: 4px; }
-.menu-item:hover { background: rgba(255,215,0,0.2); }
-.menu-right { margin-left: auto; display: flex; align-items: center; gap: 16px; }
+#menu-bar { position: fixed; top: 0; width: 100%; height: 28px; background: rgba(10,10,10,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,215,0,0.2); display: flex; align-items: center; padding: 0 12px; z-index: 9000; font-size: 12px; }
+.menu-apple { font-size: 14px; margin-right: 15px; color: var(--gold); cursor: pointer; }
+.menu-item { padding: 2px 8px; margin-right: 2px; cursor: pointer; border-radius: 3px; }
+.menu-item:hover { background: rgba(255,215,0,0.15); }
+.menu-right { margin-left: auto; display: flex; gap: 12px; align-items: center; }
 
 /* DESKTOP ICONS */
-.desktop-icons { position: absolute; top: 50px; right: 20px; display: flex; flex-direction: column; gap: 20px; }
-.desktop-icon { width: 90px; text-align: center; cursor: pointer; padding: 12px; border-radius: 12px; transition: all 0.2s; }
-.desktop-icon:hover { background: rgba(255,215,0,0.15); transform: scale(1.05); }
-.desktop-icon-img { font-size: 56px; margin-bottom: 8px; }
-.desktop-icon-label { color: var(--text); font-size: 12px; text-shadow: 0 2px 4px rgba(0,0,0,0.9); }
+.desktop-icons { position: absolute; top: 40px; right: 15px; display: flex; flex-direction: column; gap: 15px; }
+.desktop-icon { width: 75px; text-align: center; cursor: pointer; padding: 8px; border-radius: 8px; transition: all 0.2s; }
+.desktop-icon:hover { background: rgba(255,215,0,0.1); transform: scale(1.05); }
+.desktop-icon-img { font-size: 42px; margin-bottom: 4px; filter: drop-shadow(0 0 8px rgba(255,215,0,0.3)); }
+.desktop-icon-label { color: #fff; font-size: 10px; text-shadow: 0 1px 3px rgba(0,0,0,0.9); }
 
 /* DOCK */
-#dock { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); background: rgba(20,20,20,0.8); backdrop-filter: blur(30px); border: 1px solid rgba(255,215,0,0.3); border-radius: 24px; padding: 10px 16px; display: flex; gap: 10px; z-index: 8000; }
-.dock-item { width: 60px; height: 60px; border-radius: 16px; background: linear-gradient(135deg, #2a2a2a, #1a1a1a); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; position: relative; border: 1px solid rgba(255,215,0,0.2); }
-.dock-item:hover { transform: translateY(-12px) scale(1.15); border-color: var(--gold); }
-.dock-item.active::after { content: ''; position: absolute; bottom: -6px; width: 5px; height: 5px; background: var(--gold); border-radius: 50%; }
-.dock-icon { font-size: 32px; }
+#dock { position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); background: rgba(20,20,20,0.75); backdrop-filter: blur(30px); border: 1px solid rgba(255,215,0,0.2); border-radius: 18px; padding: 6px 12px; display: flex; gap: 6px; z-index: 8000; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+.dock-item { width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #2a2a2a, #1a1a1a); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; border: 1px solid rgba(255,215,0,0.15); position: relative; }
+.dock-item:hover { transform: translateY(-8px) scale(1.15); border-color: var(--gold); box-shadow: 0 0 15px rgba(255,215,0,0.3); }
+.dock-item.active::after { content: ''; position: absolute; bottom: -5px; width: 4px; height: 4px; background: var(--gold); border-radius: 50%; box-shadow: 0 0 5px var(--gold); }
+.dock-icon { font-size: 24px; }
 
 /* WINDOWS */
-.window { position: absolute; background: var(--glass); backdrop-filter: blur(30px); border: 1px solid rgba(255,215,0,0.3); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.9); min-width: 400px; min-height: 300px; display: flex; flex-direction: column; overflow: hidden; }
-.window-header { height: 42px; background: rgba(30,30,30,0.95); border-bottom: 1px solid rgba(255,215,0,0.2); display: flex; align-items: center; padding: 0 16px; cursor: move; }
-.window-controls { display: flex; gap: 8px; margin-right: 12px; }
-.window-btn { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; border: none; }
+.window { position: absolute; background: var(--glass); backdrop-filter: blur(30px); border: 1px solid rgba(255,215,0,0.25); border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.9); min-width: 320px; min-height: 250px; display: flex; flex-direction: column; overflow: hidden; transition: opacity 0.2s; }
+.window-header { height: 34px; background: rgba(30,30,30,0.95); border-bottom: 1px solid rgba(255,215,0,0.15); display: flex; align-items: center; padding: 0 12px; cursor: move; }
+.window-controls { display: flex; gap: 6px; margin-right: 10px; }
+.window-btn { width: 11px; height: 11px; border-radius: 50%; cursor: pointer; border: none; }
 .btn-close { background: var(--error); } .btn-min { background: #ffbd2e; } .btn-max { background: var(--success); }
-.window-title { color: var(--gold); font-size: 14px; font-weight: 600; flex: 1; text-align: center; }
-.window-body { flex: 1; overflow: auto; padding: 20px; color: var(--text); }
-.window-body::-webkit-scrollbar { width: 8px; }
-.window-body::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 4px; }
+.window-title { color: var(--gold); font-size: 12px; font-weight: 600; flex: 1; text-align: center; letter-spacing: 0.5px; }
+.window-body { flex: 1; overflow: auto; padding: 15px; color: var(--text); }
+.window-body::-webkit-scrollbar { width: 6px; }
+.window-body::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
 
-/* AAS CORE & HUB LAYOUT */
-.hub-layout { display: flex; height: 100%; gap: 20px; }
-.hub-sidebar { width: 240px; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 15px; border: 1px solid rgba(255,215,0,0.15); display: flex; flex-direction: column; gap: 5px; overflow-y: auto; }
-.hub-cat-btn { padding: 10px 12px; border-radius: 8px; cursor: pointer; color: var(--text-muted); font-size: 13px; transition: all 0.2s; text-align: left; border: none; background: transparent; }
-.hub-cat-btn:hover, .hub-cat-btn.active { background: rgba(255,215,0,0.15); color: var(--gold); font-weight: 600; }
-.hub-content { flex: 1; overflow-y: auto; padding-right: 10px; }
-.hub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
-.tool-card { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,215,0,0.15); border-radius: 12px; padding: 18px; cursor: pointer; transition: all 0.2s; }
-.tool-card:hover { border-color: var(--gold); transform: translateY(-3px); box-shadow: 0 5px 20px rgba(255,215,0,0.15); }
-.tool-card h4 { color: var(--gold-light); font-size: 15px; margin-bottom: 6px; }
-.tool-card p { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px; }
-.badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; margin-right: 6px; }
-.badge.oss { background: rgba(40,200,64,0.2); color: var(--success); }
-.badge.free { background: rgba(0,212,255,0.2); color: #00d4ff; }
+/* APP SPECIFIC STYLES */
+.hub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+.tool-card { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,215,0,0.1); border-radius: 10px; padding: 14px; cursor: pointer; transition: all 0.2s; }
+.tool-card:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,215,0,0.1); }
+.tool-card h4 { color: var(--gold); font-size: 13px; margin-bottom: 4px; }
+.tool-card p { font-size: 10px; color: var(--text-muted); line-height: 1.3; margin-bottom: 8px; }
+.badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 8px; font-weight: 700; background: rgba(40,200,64,0.2); color: var(--success); }
 
-/* TOOL WORKSPACE & VIDEO CONFIG */
-.tool-interface { display: flex; flex-direction: column; height: 100%; }
-.tool-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,215,0,0.2); }
-.back-btn { background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.3); color: var(--gold); padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 13px; }
-.back-btn:hover { background: rgba(255,215,0,0.2); }
-.tool-workspace { flex: 1; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
-.tool-input { width: 100%; padding: 14px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,215,0,0.3); border-radius: 10px; color: var(--text); font-size: 14px; font-family: inherit; }
-.tool-input:focus { outline: none; border-color: var(--gold); }
-.tool-btn { padding: 14px; background: linear-gradient(135deg, var(--gold), var(--gold-dim)); border: none; border-radius: 10px; color: var(--black); font-weight: 700; cursor: pointer; font-size: 14px; }
-.tool-btn:hover { box-shadow: 0 0 25px rgba(255,215,0,0.4); }
+.status-bar { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(40,200,64,0.1); border: 1px solid rgba(40,200,64,0.3); border-radius: 20px; font-size: 10px; color: var(--success); margin-bottom: 15px; font-weight: 600; }
+.status-bar.rotating { background: rgba(255,215,0,0.1); border-color: rgba(255,215,0,0.3); color: var(--gold); }
+
+.tool-input { width: 100%; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,215,0,0.2); border-radius: 8px; color: #fff; font-size: 12px; margin-bottom: 10px; font-family: inherit; resize: vertical; }
+.tool-input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 10px rgba(255,215,0,0.1); }
+.tool-btn { width: 100%; padding: 10px; background: linear-gradient(135deg, var(--gold), var(--gold-dim)); border: none; border-radius: 8px; color: #000; font-weight: 700; cursor: pointer; font-size: 12px; letter-spacing: 0.5px; transition: all 0.2s; }
+.tool-btn:hover { box-shadow: 0 0 15px rgba(255,215,0,0.3); }
 .tool-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.tool-output { background: rgba(0,0,0,0.6); border: 1px solid rgba(255,215,0,0.1); border-radius: 8px; padding: 12px; min-height: 120px; font-family: 'Courier New', monospace; font-size: 11px; white-space: pre-wrap; word-wrap: break-word; color: #0f0; line-height: 1.5; margin-top: 10px; }
+.tool-output img { max-width: 100%; border-radius: 6px; margin-top: 10px; border: 1px solid rgba(255,215,0,0.2); }
+.tool-output code { background: rgba(0,0,0,0.8); padding: 10px; border-radius: 6px; display: block; margin: 8px 0; border-left: 3px solid var(--gold); overflow-x: auto; }
 
-/* VIDEO CONFIG GRID */
-.video-config-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 15px; }
-.config-item { display: flex; flex-direction: column; gap: 6px; }
-.config-item label { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; }
-.config-item input, .config-item select { padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,215,0,0.2); border-radius: 8px; color: var(--text); font-size: 13px; }
-.config-item input:focus, .config-item select:focus { outline: none; border-color: var(--gold); }
+.back-btn { background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.2); color: var(--gold); padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; margin-bottom: 12px; display: inline-block; }
+.back-btn:hover { background: rgba(255,215,0,0.2); }
 
-/* OUTPUT DISPLAY */
-.tool-output { flex: 1; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,215,0,0.1); border-radius: 10px; padding: 20px; font-size: 14px; line-height: 1.6; overflow-y: auto; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word; color: #e0e0e0; font-family: 'Courier New', monospace; min-height: 250px; }
-.tool-output img, .tool-output video { max-width: 100%; border-radius: 8px; margin: 10px 0; display: block; border: 1px solid rgba(255,215,0,0.3); box-shadow: 0 0 20px rgba(255,215,0,0.1); }
-.tool-output code { background: rgba(0,0,0,0.8); padding: 15px; border-radius: 8px; display: block; margin: 10px 0; border-left: 3px solid var(--gold); font-family: 'Courier New', monospace; font-size: 13px; overflow-x: auto; white-space: pre; }
-.search-result { background: rgba(255,215,0,0.05); border-left: 3px solid var(--gold); padding: 15px; margin-bottom: 15px; border-radius: 0 8px 8px 0; }
-.search-result h5 { color: var(--gold-light); margin-bottom: 6px; font-size: 15px; }
-.search-result a { color: var(--gold); text-decoration: none; font-size: 13px; }
-.search-result a:hover { text-decoration: underline; }
-.search-result p { color: var(--text-muted); font-size: 12px; line-height: 1.5; margin: 5px 0; }
+.settings-row { margin-bottom: 15px; }
+.settings-row label { color: var(--gold); font-size: 12px; font-weight: 600; display: block; margin-bottom: 6px; }
+.settings-row input { width: 100%; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,215,0,0.2); border-radius: 8px; color: #fff; font-size: 12px; font-family: monospace; }
+.settings-row input:focus { outline: none; border-color: var(--gold); }
+.settings-hint { font-size: 10px; color: var(--text-muted); margin-top: 4px; line-height: 1.4; }
 
-/* PLAN PREVIEW MODAL (AAS Core) */
-.preview-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 99999; display: flex; justify-content: center; align-items: center; }
-.preview-box { background: var(--dark); border: 1px solid var(--gold); border-radius: 16px; padding: 30px; max-width: 500px; width: 90%; box-shadow: 0 0 50px rgba(255,215,0,0.2); }
-.preview-box h3 { color: var(--gold); margin-bottom: 15px; font-size: 18px; }
-.preview-box ul { list-style: none; margin-bottom: 25px; }
-.preview-box li { padding: 8px 0; color: var(--text-muted); border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
-.preview-box li::before { content: '✓ '; color: var(--success); }
-.preview-actions { display: flex; gap: 10px; justify-content: flex-end; }
-.preview-btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 14px; }
-.btn-approve { background: var(--success); color: #fff; }
-.btn-deny { background: rgba(255,255,255,0.1); color: var(--text); }
-
-/* NOTIFICATIONS */
-.notification { position: fixed; top: 50px; right: 20px; background: var(--glass); backdrop-filter: blur(20px); border: 1px solid rgba(255,215,0,0.3); border-radius: 12px; padding: 16px 20px; color: var(--text); z-index: 9998; animation: slideIn 0.3s; min-width: 300px; }
-@keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
-
-@media (max-width: 768px) {
-  .hub-layout { flex-direction: column; }
-  .hub-sidebar { width: 100%; flex-direction: row; overflow-x: auto; }
-  .window { min-width: 95vw !important; min-height: 80vh !important; }
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .window { min-width: 92vw !important; min-height: 70vh !important; left: 4vw !important; top: 40px !important; }
+  .hub-grid { grid-template-columns: 1fr 1fr; }
 }
 </style>
 </head>
 <body>
 
+<!-- BOOT SCREEN -->
 <div id="boot-screen">
   <div class="boot-logo">⚡</div>
-  <div class="boot-text">Initializing AuraOS AAS Core</div>
-  <div class="boot-bar-container"><div class="boot-bar" id="boot-bar"></div></div>
+  <div class="boot-text">Initializing AuraOS v8.0</div>
+  <div class="boot-bar"><div class="boot-bar-fill" id="boot-bar"></div></div>
 </div>
 
+<!-- DESKTOP -->
 <div id="desktop">
-  <canvas class="matrix-canvas" id="matrix"></canvas>
+  <canvas id="matrix"></canvas>
   
   <div id="menu-bar">
-    <span class="menu-apple">⚡</span>
+    <span class="menu-apple" onclick="Aura.openApp('settings')"></span>
     <span class="menu-item" id="active-app">Finder</span>
     <span class="menu-item">File</span>
     <span class="menu-item">Edit</span>
-    <span class="menu-item">View</span>
     <div class="menu-right">
-      <span> 100%</span>
       <span>📶</span>
       <span id="clock">12:00</span>
     </div>
   </div>
 
   <div class="desktop-icons">
-    <div class="desktop-icon" ondblclick="Aura.openApp('aas-hub')"><div class="desktop-icon-img">🧠</div><div class="desktop-icon-label">AAS Hub</div></div>
-    <div class="desktop-icon" ondblclick="Aura.openApp('video-studio')"><div class="desktop-icon-img">🎬</div><div class="desktop-icon-label">Video Studio</div></div>
+    <div class="desktop-icon" ondblclick="Aura.openApp('ai')"><div class="desktop-icon-img">🧠</div><div class="desktop-icon-label">AI Tools</div></div>
+    <div class="desktop-icon" ondblclick="Aura.openApp('image')"><div class="desktop-icon-img">🎨</div><div class="desktop-icon-label">Image Gen</div></div>
+    <div class="desktop-icon" ondblclick="Aura.openApp('settings')"><div class="desktop-icon-img">️</div><div class="desktop-icon-label">Settings</div></div>
     <div class="desktop-icon" ondblclick="Aura.openApp('terminal')"><div class="desktop-icon-img">⌨️</div><div class="desktop-icon-label">Terminal</div></div>
   </div>
 
   <div id="windows-container"></div>
 
   <div id="dock">
-    <div class="dock-item active" onclick="Aura.openApp('aas-hub')"><div class="dock-icon">🧠</div></div>
-    <div class="dock-item" onclick="Aura.openApp('video-studio')"><div class="dock-icon">🎬</div></div>
+    <div class="dock-item active" onclick="Aura.openApp('ai')"><div class="dock-icon">🧠</div></div>
+    <div class="dock-item" onclick="Aura.openApp('image')"><div class="dock-icon">🎨</div></div>
+    <div class="dock-item" onclick="Aura.openApp('settings')"><div class="dock-icon">⚙️</div></div>
     <div class="dock-item" onclick="Aura.openApp('terminal')"><div class="dock-icon">⌨️</div></div>
   </div>
 </div>
 
 <script>
-/* ============================================
-   AAS CORE: AGENTIC AWESOME SKILLS ENGINE
-   ============================================ */
-const AAS_SKILLS = {
-  llms: [
-    { id: 'llama3', name: 'Llama 3', desc: 'Meta\'s open-source LLM for chat and reasoning', badges: ['Open Weights', 'Free'], model: 'llama3' },
-    { id: 'mistral', name: 'Mistral', desc: 'Fast, efficient open-source models', badges: ['Apache 2.0', 'Free'], model: 'mistral' },
-    { id: 'qwen', name: 'Qwen', desc: 'Alibaba\'s powerful multilingual LLM', badges: ['Apache 2.0', 'Free'], model: 'qwen' }
-  ],
-  image: [
-    { id: 'flux', name: 'FLUX', desc: 'State-of-the-art text-to-image generation', badges: ['Open Weights', 'Free'], type: 'image', model: 'flux' },
-    { id: 'stable', name: 'Stable Diffusion', desc: 'Community standard image generation', badges: ['Open Weights', 'Free'], type: 'image', model: 'stable-diffusion' }
-  ],
-  code: [
-    { id: 'codellama', name: 'CodeLlama', desc: 'Generate code in any language', badges: ['Open License', 'Free'], type: 'code', model: 'codellama' },
-    { id: 'python', name: 'Python Generator', desc: 'Write Python scripts and functions', badges: ['Free', 'Open'], type: 'code', model: 'llama3' }
-  ],
-  research: [
-    { id: 'searxng', name: 'SearXNG Search', desc: 'Live web search with real results', badges: ['AGPLv3', '100% Free'], type: 'search' },
-    { id: 'summarize', name: 'Web Summarizer', desc: 'Fetch and summarize any URL', badges: ['Free', 'Open'], type: 'summarize' }
-  ],
-  agents: [
-    { id: 'researcher', name: 'AI Researcher', desc: 'Search web then synthesize answer', badges: ['MIT', 'Free'], type: 'agent' }
-  ]
+// ==========================================
+// ROTATION ENGINE (NEVER RUNS OUT)
+// ==========================================
+const RotationEngine = {
+  async executeText(prompt, type) {
+    // 1. Try Pollinations (100% Free, No Key)
+    try {
+      const model = type === 'code' ? 'llama' : 'mistral';
+      const url = `https://text.pollinations.ai/${encodeURIComponent(prompt)}?model=${model}&seed=${Math.floor(Math.random()*10000)}`;
+      const res = await fetch(url, { signal: AbortSignal.timeout(12000) });
+      if (res.ok) {
+        const text = await res.text();
+        if (text && text.length > 5) return { text, provider: 'Pollinations (Free)', model };
+      }
+    } catch(e) { console.log('Pollinations failed, trying fallback...'); }
+
+    // 2. Try OpenRouter (Free Tier Models, Requires Key)
+    const key = localStorage.getItem('aura_or_key');
+    if (key) {
+      try {
+        const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json', 'HTTP-Referer': location.href, 'X-Title': 'AuraOS' },
+          body: JSON.stringify({ model: 'meta-llama/llama-3-8b-instruct:free', messages: [{role:'user', content: prompt}] }),
+          signal: AbortSignal.timeout(15000)
+        });
+        if (res.ok) {
+          const data = await res.json();
+          return { text: data.choices[0].message.content, provider: 'OpenRouter (Free Tier)', model: 'Llama 3 Free' };
+        }
+      } catch(e) { console.log('OpenRouter failed'); }
+    }
+
+    throw new Error('All providers failed. Add an OpenRouter API key in Settings for unlimited fallback.');
+  },
+
+  getImageUrl(prompt) {
+    return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024&nologo=true&seed=${Math.floor(Math.random()*10000)}&model=flux&enhance=true`;
+  }
 };
 
-/* ============================================
-   VIDEO GENERATION CONFIG (Fully Implemented)
-   ============================================ */
-const VIDEO_CONFIG = {
-  models: ['wan2.1', 'cogvideox', 'stable-video', 'flux-animate'],
-  resolutions: ['1024x576', '1280x720', '1920x1080'],
-  fpsOptions: [8, 16, 24, 30],
-  durations: [2, 4, 6, 10]
-};
-
+// ==========================================
+// AURA OS CORE
+// ==========================================
 class AuraOS {
   constructor() {
     this.windows = new Map();
@@ -210,27 +193,28 @@ class AuraOS {
 
   async boot() {
     const bar = document.getElementById('boot-bar');
-    for (let i = 0; i <= 100; i += 2) {
+    for (let i = 0; i <= 100; i += 4) {
       bar.style.width = i + '%';
-      await new Promise(r => setTimeout(r, 25));
+      await new Promise(r => setTimeout(r, 30));
     }
-    await new Promise(r => setTimeout(r, 400));
-    document.getElementById('boot-screen').style.opacity = '0';
-    setTimeout(() => document.getElementById('boot-screen').style.display = 'none', 1000);
+    setTimeout(() => {
+      document.getElementById('boot-screen').style.opacity = '0';
+      setTimeout(() => document.getElementById('boot-screen').style.display = 'none', 800);
+    }, 200);
     this.initMatrix();
     this.startClock();
-    this.notify('⚡ AuraOS Nexus v7.0', 'AAS Core & Video Studio Initialized');
   }
 
   initMatrix() {
     const canvas = document.getElementById('matrix');
     const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-    const chars = '⚡01アイウエオ';
-    const fontSize = 14;
+    const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+    resize(); window.addEventListener('resize', resize);
+    const chars = '01アイウエオカキクケコ⚡';
+    const fontSize = 12;
     const columns = canvas.width / fontSize;
     const drops = Array(Math.floor(columns)).fill(1);
-    const draw = () => {
+    setInterval(() => {
       ctx.fillStyle = 'rgba(0,0,0,0.05)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = '#FFD700';
@@ -240,392 +224,255 @@ class AuraOS {
         if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
         drops[i]++;
       }
-    };
-    setInterval(draw, 50);
+    }, 60);
   }
 
   startClock() {
-    const update = () => { document.getElementById('clock').textContent = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}); };
-    update(); setInterval(update, 1000);
+    setInterval(() => { document.getElementById('clock').textContent = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}); }, 1000);
   }
 
-  notify(title, msg) {
-    const n = document.createElement('div');
-    n.className = 'notification';
-    n.innerHTML = `<strong style="color:var(--gold)">${title}</strong><br><span style="font-size:12px;color:#888">${msg}</span>`;
-    document.body.appendChild(n);
-    setTimeout(() => n.remove(), 4000);
-  }
-
-  openApp(appId) {
-    if (this.windows.has(appId)) {
-      const w = this.windows.get(appId);
+  openApp(id) {
+    if (this.windows.has(id)) {
+      const w = this.windows.get(id);
       w.style.display = 'flex'; w.style.zIndex = ++this.zIndex;
       return;
     }
-    const app = this.getAppConfig(appId);
+
+    const apps = {
+      'ai': { name: 'AI Tools', icon: '🧠', width: '90vw', height: '70vh',
+        content: `
+          <div class="status-bar" id="ai-status">✅ Rotation Engine Active (Free First)</div>
+          <div class="hub-grid" id="ai-grid">
+            <div class="tool-card" onclick="AuraTool.open('chat', 'AI Chat')"><h4>💬 AI Chat</h4><p>General conversation & reasoning</p><span class="badge">Auto-Rotate</span></div>
+            <div class="tool-card" onclick="AuraTool.open('code', 'Code Generator')"><h4>💻 Code Gen</h4><p>Write code in any language</p><span class="badge">Auto-Rotate</span></div>
+            <div class="tool-card" onclick="AuraTool.open('write', 'Creative Writing')"><h4>📝 Writing</h4><p>Stories, poems, essays</p><span class="badge">Auto-Rotate</span></div>
+          </div>
+          <div id="ai-workspace" style="display:none;">
+            <button class="back-btn" onclick="AuraTool.close('ai')">← Back to Tools</button>
+            <textarea class="tool-input" id="ai-input" rows="3" placeholder="Enter your prompt..."></textarea>
+            <button class="tool-btn" id="ai-btn" onclick="AuraTool.generate('ai', 'text')">Generate (Auto-Rotate)</button>
+            <div class="tool-output" id="ai-output">Ready. Enter a prompt above.</div>
+          </div>
+        `
+      },
+      'image': { name: 'Image Generator', icon: '🎨', width: '90vw', height: '70vh',
+        content: `
+          <div class="status-bar" id="img-status">✅ Image Rotation Active (FLUX)</div>
+          <div class="hub-grid" id="img-grid">
+            <div class="tool-card" onclick="AuraTool.open('flux', 'FLUX Image')"><h4>🌌 FLUX</h4><p>High-quality, detailed images</p><span class="badge">Free</span></div>
+            <div class="tool-card" onclick="AuraTool.open('stable', 'Stable Diffusion')"><h4>🎨 Stable Diffusion</h4><p>Fast, versatile generation</p><span class="badge">Free</span></div>
+          </div>
+          <div id="img-workspace" style="display:none;">
+            <button class="back-btn" onclick="AuraTool.close('img')">← Back</button>
+            <input class="tool-input" id="img-input" placeholder="Describe the image (e.g., 'A golden cyberpunk supercomputer')">
+            <button class="tool-btn" id="img-btn" onclick="AuraTool.generate('img', 'image')">Generate Image</button>
+            <div class="tool-output" id="img-output" style="text-align:center; min-height:150px; display:flex; align-items:center; justify-content:center;">Ready.</div>
+          </div>
+        `
+      },
+      'settings': { name: 'Settings', icon: '⚙️', width: '85vw', height: '60vh',
+        content: `
+          <h3 style="color:var(--gold);margin-bottom:15px;font-size:16px;">Provider Configuration</h3>
+          <div class="settings-row">
+            <label>OpenRouter API Key (Unlimited Fallback)</label>
+            <input type="password" id="or-key" placeholder="sk-or-v1-..." value="${localStorage.getItem('aura_or_key') || ''}">
+            <div class="settings-hint">If free providers fail, the system automatically uses this key with OpenRouter's free-tier models (Llama 3, Mistral, Gemma). Get a free key at openrouter.ai</div>
+          </div>
+          <button class="tool-btn" onclick="AuraTool.saveSettings()" style="width:auto;padding:8px 16px;">Save Configuration</button>
+          <div id="settings-msg" style="margin-top:10px;color:var(--success);font-size:12px;"></div>
+          <div style="margin-top:30px;padding:15px;background:rgba(0,0,0,0.4);border-radius:8px;border:1px solid rgba(255,215,0,0.1);font-size:11px;color:#888;line-height:1.5;">
+            <strong style="color:var(--gold)"> AuraOS v8.0 Rotation Engine</strong><br>
+            Priority 1: Pollinations (100% Free, No Key)<br>
+            Priority 2: OpenRouter Free Tier (Requires Key)<br>
+            Status: <span style="color:var(--success)">Online & Auto-Rotating</span>
+          </div>
+        `
+      },
+      'terminal': { name: 'Terminal', icon: '️', width: '90vw', height: '60vh',
+        content: `<div id="term-body" style="background:#000;color:#0f0;font-family:monospace;padding:12px;height:100%;overflow-y:auto;font-size:11px;line-height:1.5">
+          <div>AuraOS Rotation Engine v8.0</div>
+          <div>Type "help" for commands.</div>
+          <div style="display:flex;margin-top:8px"><span style="color:var(--gold);margin-right:6px">aura@nexus:~$</span><input id="term-in" style="background:transparent;border:none;color:#0f0;font-family:inherit;outline:none;flex:1;font-size:11px" onkeydown="if(event.key==='Enter')AuraTerm.run()"></div>
+        </div>`
+      }
+    };
+
+    const app = apps[id];
     const win = document.createElement('div');
     win.className = 'window';
-    win.id = `win-${appId}`;
-    win.style.left = (80 + this.windows.size * 25) + 'px';
-    win.style.top = (60 + this.windows.size * 25) + 'px';
-    win.style.width = app.width || '900px';
-    win.style.height = app.height || '650px';
+    win.id = `win-${id}`;
+    win.style.left = (20 + this.windows.size * 15) + 'px';
+    win.style.top = (40 + this.windows.size * 15) + 'px';
+    win.style.width = app.width;
+    win.style.height = app.height;
     win.style.zIndex = ++this.zIndex;
     win.innerHTML = `
-      <div class="window-header" onmousedown="Aura.dragWindow(event, '${appId}')">
+      <div class="window-header" onmousedown="Aura.drag(event, '${id}')">
         <div class="window-controls">
-          <button class="window-btn btn-close" onclick="Aura.closeApp('${appId}')"></button>
+          <button class="window-btn btn-close" onclick="Aura.closeApp('${id}')"></button>
           <button class="window-btn btn-min" onclick="this.closest('.window').style.display='none'"></button>
-          <button class="window-btn btn-max" onclick="Aura.maximize('${appId}')"></button>
+          <button class="window-btn btn-max" onclick="Aura.maximize('${id}')"></button>
         </div>
         <div class="window-title">${app.icon} ${app.name}</div>
       </div>
       <div class="window-body">${app.content}</div>
     `;
     document.getElementById('windows-container').appendChild(win);
-    this.windows.set(appId, win);
+    this.windows.set(id, win);
     document.getElementById('active-app').textContent = app.name;
-    if (app.onOpen) app.onOpen(win);
   }
 
   closeApp(id) { const w = this.windows.get(id); if (w) { w.remove(); this.windows.delete(id); } }
+  
   maximize(id) {
     const w = this.windows.get(id);
-    if (w) {
-      if (w.dataset.max === '1') { w.style.width = '900px'; w.style.height = '650px'; w.style.top = '60px'; w.style.left = '80px'; w.dataset.max = '0'; }
-      else { w.style.width = '100%'; w.style.height = 'calc(100% - 100px)'; w.style.top = '32px'; w.style.left = '0'; w.dataset.max = '1'; }
+    if (w.dataset.max) {
+      w.style.width = '90vw'; w.style.height = '70vh'; w.style.top = '40px'; w.style.left = '20px'; delete w.dataset.max;
+    } else {
+      w.style.width = '100%'; w.style.height = 'calc(100% - 30px)'; w.style.top = '28px'; w.style.left = '0'; w.dataset.max = '1';
     }
   }
 
-  dragWindow(e, id) {
+  drag(e, id) {
     const win = this.windows.get(id);
-    if (win.dataset.max === '1') return;
+    if (win.dataset.max) return;
     const startX = e.clientX - win.offsetLeft, startY = e.clientY - win.offsetTop;
     const move = (ev) => { win.style.left = (ev.clientX - startX) + 'px'; win.style.top = (ev.clientY - startY) + 'px'; };
     const up = () => { document.removeEventListener('mousemove', move); document.removeEventListener('mouseup', up); };
     document.addEventListener('mousemove', move); document.addEventListener('mouseup', up);
     win.style.zIndex = ++this.zIndex;
   }
-
-  getAppConfig(id) {
-    if (id === 'aas-hub') {
-      return {
-        name: 'AAS Skill Hub', icon: '🧠', width: '1000px', height: '700px',
-        content: `
-          <div class="hub-layout">
-            <div class="hub-sidebar">
-              <button class="hub-cat-btn active" onclick="AuraHub.renderCategory('llms', this)">🧠 LLMs</button>
-              <button class="hub-cat-btn" onclick="AuraHub.renderCategory('image', this)">🎨 Image</button>
-              <button class="hub-cat-btn" onclick="AuraHub.renderCategory('code', this)">💻 Code</button>
-              <button class="hub-cat-btn" onclick="AuraHub.renderCategory('research', this)">🔬 Research</button>
-              <button class="hub-cat-btn" onclick="AuraHub.renderCategory('agents', this)">🤖 Agents</button>
-            </div>
-            <div class="hub-content" id="hub-main-content"></div>
-          </div>
-        `,
-        onOpen: (w) => setTimeout(() => AuraHub.renderCategory('llms', w.querySelector('.hub-cat-btn')), 100)
-      };
-    }
-    if (id === 'video-studio') {
-      return {
-        name: 'Video Generation Studio', icon: '🎬', width: '1000px', height: '750px',
-        content: `
-          <div class="tool-interface">
-            <div class="tool-header">
-              <h3 style="color:var(--gold);font-size:18px">🎬 Agentic Video Generation</h3>
-              <div><span class="badge oss">Open Source</span><span class="badge free">Free Tier</span></div>
-            </div>
-            <div class="tool-workspace">
-              <input class="tool-input" id="vid-prompt" placeholder="Describe the video scene in detail (e.g., 'A cyberpunk city with flying cars in golden hour lighting, cinematic, 4k')">
-              
-              <div class="video-config-grid">
-                <div class="config-item">
-                  <label>Model</label>
-                  <select id="vid-model">${VIDEO_CONFIG.models.map(m => `<option value="${m}">${m.toUpperCase()}</option>`).join('')}</select>
-                </div>
-                <div class="config-item">
-                  <label>Resolution</label>
-                  <select id="vid-res">${VIDEO_CONFIG.resolutions.map(r => `<option value="${r}">${r}</option>`).join('')}</select>
-                </div>
-                <div class="config-item">
-                  <label>FPS</label>
-                  <select id="vid-fps">${VIDEO_CONFIG.fpsOptions.map(f => `<option value="${f}">${f} fps</option>`).join('')}</select>
-                </div>
-                <div class="config-item">
-                  <label>Duration (s)</label>
-                  <select id="vid-dur">${VIDEO_CONFIG.durations.map(d => `<option value="${d}">${d}s</option>`).join('')}</select>
-                </div>
-                <div class="config-item">
-                  <label>Seed (Optional)</label>
-                  <input type="number" id="vid-seed" placeholder="Random">
-                </div>
-              </div>
-              
-              <input class="tool-input" id="vid-negative" placeholder="Negative prompt (e.g., 'blurry, low quality, distorted, watermark')" style="margin-bottom: 15px;">
-              
-              <button class="tool-btn" id="vid-btn" onclick="AuraVideo.generate()">🎬 Generate Video (Plan & Execute)</button>
-              <div class="tool-output" id="vid-out">Ready. Configure parameters and click Generate.</div>
-            </div.
-          </div>
-        `
-      };
-    }
-    if (id === 'terminal') {
-      return {
-        name: 'Terminal', icon: '⌨️', width: '700px', height: '450px',
-        content: `<div id="term-body" style="background:#000;color:#0f0;font-family:monospace;padding:16px;height:100%;overflow-y:auto"><div style="margin-bottom:6px">⚡ AuraOS AAS Terminal v7.0</div><div style="margin-bottom:6px">Type "help" for commands.</div><div style="display:flex"><span style="color:var(--gold);margin-right:8px">aura@nexus:~$</span><input id="term-input" style="background:transparent;border:none;color:#0f0;font-family:inherit;font-size:inherit;outline:none;flex:1" onkeydown="if(event.key==='Enter')AuraTerm.run()"></div></div>`,
-        onOpen: (w) => setTimeout(() => w.querySelector('#term-input').focus(), 100)
-      };
-    }
-    return { name: 'Finder', icon: '📁', width: '600px', height: '400px', content: '<div style="padding:20px;color:#888">Ready.</div>' };
-  }
 }
 
-/* ============================================
-   AAS HUB ENGINE
-   ============================================ */
-const AuraHub = {
-  currentCategory: 'llms',
-  
-  renderCategory(cat, btn) {
-    this.currentCategory = cat;
-    document.querySelectorAll('.hub-cat-btn').forEach(b => b.classList.remove('active'));
-    if (btn) btn.classList.add('active');
-    
-    const container = document.getElementById('hub-main-content');
-    const tools = AAS_SKILLS[cat];
-    let html = `<div class="hub-grid">`;
-    tools.forEach(tool => {
-      const badges = tool.badges.map(b => `<span class="badge ${b.includes('Free') || b.includes('100%') ? 'free' : 'oss'}">${b}</span>`).join('');
-      html += `
-        <div class="tool-card" onclick="AuraHub.openTool('${cat}', '${tool.id}')">
-          <h4>${tool.name}</h4>
-          <p>${tool.desc}</p>
-          <div>${badges}</div>
-        </div>
-      `;
-    });
-    html += `</div>`;
-    container.innerHTML = html;
+// ==========================================
+// TOOL HANDLERS
+// ==========================================
+let currentToolType = '';
+
+const AuraTool = {
+  open(type, name) {
+    currentToolType = type;
+    document.getElementById('ai-grid').style.display = 'none';
+    document.getElementById('ai-workspace').style.display = 'block';
+    document.getElementById('ai-output').innerHTML = 'Ready. Enter a prompt above.';
+    document.getElementById('ai-input').value = '';
+    document.getElementById('ai-input').placeholder = type === 'code' ? 'Describe the code (e.g., Python sort function)' : 'Enter your prompt...';
   },
 
-  openTool(cat, toolId) {
-    const tool = AAS_SKILLS[cat].find(t => t.id === toolId);
-    const container = document.getElementById('hub-main-content');
-    
-    let placeholder = 'Enter your prompt...';
-    let btnText = 'Generate';
-    if (tool.type === 'image') { placeholder = 'Describe the image...'; btnText = 'Generate Image'; }
-    if (tool.type === 'search') { placeholder = 'Search query...'; btnText = 'Search'; }
-    if (tool.type === 'code') { placeholder = 'Describe the code you need...'; btnText = 'Generate Code'; }
-    if (tool.type === 'agent') { placeholder = 'Complex task...'; btnText = 'Run Agent'; }
-
-    container.innerHTML = `
-      <div class="tool-interface">
-        <div class="tool-header">
-          <button class="back-btn" onclick="AuraHub.renderCategory('${cat}', document.querySelector('.hub-cat-btn.active'))">← Back</button>
-          <h3 style="color:var(--gold);font-size:18px">${tool.name}</h3>
-          <div>${tool.badges.map(b => `<span class="badge ${b.includes('Free') || b.includes('100%') ? 'free' : 'oss'}">${b}</span>`).join('')}</div>
-        </div>
-        <div class="tool-workspace">
-          <input class="tool-input" id="tool-in" placeholder="${placeholder}" onkeydown="if(event.key==='Enter')AuraHub.execute('${cat}', '${toolId}')">
-          <button class="tool-btn" id="tool-btn" onclick="AuraHub.execute('${cat}', '${toolId}')">${btnText}</button>
-          <div class="tool-output" id="tool-out">Ready. Enter input above.</div>
-        </div>
-      </div>
-    `;
+  close(app) {
+    document.getElementById(`${app}-workspace`).style.display = 'none';
+    document.getElementById(`${app}-grid`).style.display = 'grid';
   },
 
-  async execute(cat, toolId) {
-    const input = document.getElementById('tool-in').value.trim();
-    const out = document.getElementById('tool-out');
-    const btn = document.getElementById('tool-btn');
-    if (!input) { out.innerHTML = '<span style="color:var(--error)">⚠️ Enter input</span>'; return; }
-
-    // AAS CORE: Plan Preview
-    const plan = [
-      `Validate input parameters`,
-      `Route request to ${toolId} open-source endpoint`,
-      `Process and format output for display`
-    ];
+  async generate(app, category) {
+    const input = document.getElementById(`${app}-input`).value.trim();
+    const out = document.getElementById(`${app}-output`);
+    const btn = document.getElementById(`${app}-btn`);
+    const status = document.getElementById(`${app}-status`);
     
-    const approved = await AuraAAS.showPlanPreview(`${toolId.toUpperCase()} Execution Plan`, plan);
-    if (!approved) {
-      out.innerHTML = '<span style="color:var(--error)">❌ Execution cancelled by user.</span>';
-      return;
-    }
-
-    btn.disabled = true;
-    btn.textContent = 'Processing...';
-    out.innerHTML = '<span style="color:var(--gold)">⏳ Executing skill...</span>';
+    if (!input) { out.innerHTML = '<span style="color:var(--error)">⚠️ Enter a prompt</span>'; return; }
+    
+    btn.disabled = true; btn.textContent = 'Routing & Generating...';
+    status.className = 'status-bar rotating'; status.textContent = '⏳ Trying Pollinations (Free)...';
+    out.innerHTML = '<span style="color:var(--gold)">⏳ Initializing rotation sequence...</span>';
 
     try {
-      const tool = AAS_SKILLS[cat].find(t => t.id === toolId);
+      let prompt = input;
+      if (currentToolType === 'code') prompt = `Write complete, well-commented code for: ${input}. Return only the code block.`;
+      if (currentToolType === 'write') prompt = `Write creatively: ${input}`;
+
+      const result = await RotationEngine.executeText(prompt, currentToolType);
       
-      if (tool.type === 'image') {
-        const seed = Math.floor(Math.random() * 10000);
-        const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(input)}?width=1024&height=1024&nologo=true&seed=${seed}&model=${tool.model}`;
-        out.innerHTML = `<div style="text-align:center"><div style="color:var(--gold);margin-bottom:15px">Generated by ${tool.name}</div><img src="${imgUrl}" alt="Generated Image" style="max-width:100%;border-radius:8px;"><div style="margin-top:15px;color:#888;font-size:12px">Prompt: "${input}"</div></div>`;
+      status.className = 'status-bar'; status.textContent = `✅ Success: ${result.provider}`;
+      
+      let formattedData = result.text;
+      if (currentToolType === 'code') {
+        formattedData = formattedData.replace(/```(\w+)?\n([\s\S]*?)```/g, '<code>$2</code>');
+      } else {
+        formattedData = formattedData.replace(/\n/g, '<br>');
       }
-      else if (tool.type === 'search') {
-        const res = await fetch(`https://searx.be/search?q=${encodeURIComponent(input)}&format=json`);
-        const data = await res.json();
-        if (data.results && data.results.length > 0) {
-          let html = `<div style="color:var(--gold);margin-bottom:15px">Found ${data.results.length} results</div>`;
-          data.results.slice(0, 8).forEach(r => {
-            html += `<div class="search-result"><h5><a href="${r.url}" target="_blank">${r.title}</a></h5><div style="color:#00d4ff;font-size:11px;margin-bottom:5px">${r.url}</div><p>${r.content || 'No description'}</p></div>`;
-          });
-          out.innerHTML = html;
-        } else { out.innerHTML = 'No results found.'; }
-      }
-      else if (tool.type === 'code') {
-        const prompt = `Write complete, working code for: ${input}. Include comments. Return code in a code block.`;
-        const res = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}?model=${tool.model || 'llama3'}`);
-        const text = await res.text();
-        out.innerHTML = `<div style="color:var(--gold);margin-bottom:15px">Generated Code</div>${text.replace(/```(\w+)?\n([\s\S]*?)```/g, '<code>$2</code>')}`;
-      }
-      else if (tool.type === 'agent') {
-        out.innerHTML = '<span style="color:var(--gold)">🤖 Agent Workflow:</span>\n\n[1/2] Searching web for context...';
-        const searchRes = await fetch(`https://searx.be/search?q=${encodeURIComponent(input)}&format=json`);
-        const searchData = await searchRes.json();
-        const context = searchData.results ? searchData.results.slice(0, 3).map(r => r.content).join(' ') : '';
-        out.innerHTML += '\n\n[2/2] Synthesizing answer...';
-        const prompt = `Based on this context: "${context}". Provide a comprehensive answer to: ${input}`;
-        const res = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}?model=llama3`);
-        out.innerHTML = `<div style="color:var(--gold);margin-bottom:15px">🤖 AI Researcher Response</div>${await res.text()}`;
-      }
-      else {
-        const res = await fetch(`https://text.pollinations.ai/${encodeURIComponent(input)}?model=${tool.model}`);
-        out.innerHTML = `<div style="color:var(--gold);margin-bottom:15px">${tool.name} Response</div>${(await res.text()).replace(/\n/g, '<br>')}`;
-      }
+
+      out.innerHTML = `<div style="color:var(--gold);margin-bottom:8px;font-size:10px;">✅ Generated via: <strong>${result.provider}</strong> (Model: ${result.model})</div>${formattedData}`;
     } catch (e) {
-      out.innerHTML = `<span style="color:var(--error)">❌ Error: ${e.message}</span>`;
+      status.className = 'status-bar'; status.style.color = 'var(--error)'; status.style.borderColor = 'var(--error)';
+      status.textContent = '❌ All providers failed';
+      out.innerHTML = `<span style="color:var(--error)">❌ ${e.message}</span>`;
     }
     
-    btn.disabled = false;
-    btn.textContent = cat === 'image' ? 'Generate Image' : cat === 'search' ? 'Search' : 'Generate';
-  }
-};
+    btn.disabled = false; btn.textContent = 'Generate (Auto-Rotate)';
+  },
 
-/* ============================================
-   AAS CORE: PLAN PREVIEW & VIDEO ENGINE
-   ============================================ */
-const AuraAAS = {
-  showPlanPreview(title, steps) {
-    return new Promise(resolve => {
-      const modal = document.createElement('div');
-      modal.className = 'preview-modal';
-      modal.innerHTML = `
-        <div class="preview-box">
-          <h3>🛡️ ${title}</h3>
-          <p style="color:var(--text-muted);margin-bottom:15px;font-size:13px">The agent plans to execute the following steps:</p>
-          <ul>${steps.map(s => `<li>${s}</li>`).join('')}</ul>
-          <div class="preview-actions">
-            <button class="preview-btn btn-deny" id="preview-deny">Cancel</button>
-            <button class="preview-btn btn-approve" id="preview-approve">Approve & Execute</button>
-          </div>
-        </div>
-      `;
-      document.body.appendChild(modal);
-      
-      modal.querySelector('#preview-approve').onclick = () => { modal.remove(); resolve(true); };
-      modal.querySelector('#preview-deny').onclick = () => { modal.remove(); resolve(false); };
-    });
-  }
-};
-
-const AuraVideo = {
-  async generate() {
-    const prompt = document.getElementById('vid-prompt').value.trim();
-    const model = document.getElementById('vid-model').value;
-    const res = document.getElementById('vid-res').value;
-    const fps = document.getElementById('vid-fps').value;
-    const dur = document.getElementById('vid-dur').value;
-    const seed = document.getElementById('vid-seed').value || Math.floor(Math.random() * 10000);
-    const negative = document.getElementById('vid-negative').value.trim();
-    const out = document.getElementById('vid-out');
-    const btn = document.getElementById('vid-btn');
-
-    if (!prompt) { out.innerHTML = '<span style="color:var(--error)">⚠️ Enter a video prompt</span>'; return; }
-
-    const plan = [
-      `Initialize ${model.toUpperCase()} video generation pipeline`,
-      `Apply config: ${res} @ ${fps}fps for ${dur}s`,
-      `Apply negative prompt: "${negative || 'None'}"`,
-      `Stream generation and render output`
-    ];
+  async generateImage(app, category) {
+    const input = document.getElementById(`${app}-input`).value.trim();
+    const out = document.getElementById(`${app}-output`);
+    const btn = document.getElementById(`${app}-btn`);
+    const status = document.getElementById(`${app}-status`);
     
-    const approved = await AuraAAS.showPlanPreview('Video Generation Plan', plan);
-    if (!approved) { out.innerHTML = '<span style="color:var(--error)">❌ Execution cancelled.</span>'; return; }
-
-    btn.disabled = true;
-    btn.textContent = 'Generating Video...';
-    out.innerHTML = '<span style="color:var(--gold)">⏳ Connecting to open-source video cluster...</span>';
+    if (!input) { out.innerHTML = '<span style="color:var(--error)">⚠️ Enter a prompt</span>'; return; }
+    
+    btn.disabled = true; btn.textContent = 'Generating...';
+    status.className = 'status-bar rotating'; status.textContent = '⏳ Generating via FLUX...';
+    out.innerHTML = '<span style="color:var(--gold)"> Creating image...</span>';
 
     try {
-      // REAL VIDEO GENERATION: Uses Pollinations Video API (free, no key)
-      // Fallback to high-quality image sequence if video endpoint is busy
-      const [w, h] = res.split('x');
-      const fullPrompt = `${prompt}. ${negative ? 'Avoid: ' + negative : ''}`;
-      const videoUrl = `https://video.pollinations.ai/prompt/${encodeURIComponent(fullPrompt)}?width=${w}&height=${h}&seed=${seed}&model=${model}`;
-      
-      // We display it as a video element. If the endpoint returns an image (fallback), it still renders beautifully.
-      out.innerHTML = `
-        <div style="text-align:center">
-          <div style="color:var(--gold);margin-bottom:15px;font-size:16px">🎬 Generated by ${model.toUpperCase()}</div>
-          <video controls autoplay loop muted style="max-width:100%;border-radius:8px;box-shadow:0 0 30px rgba(255,215,0,0.3)">
-            <source src="${videoUrl}" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-          <div style="margin-top:15px;color:#888;font-size:12px;text-align:left;background:rgba(0,0,0,0.5);padding:15px;border-radius:8px">
-            <strong>Config Applied:</strong><br>
-            Resolution: ${res} | FPS: ${fps} | Duration: ${dur}s | Seed: ${seed}<br>
-            Prompt: "${prompt}"
-         9>
-          </div>
-        </div>
-      `;
+      const url = RotationEngine.getImageUrl(input);
+      const img = new Image();
+      img.onload = () => {
+        status.className = 'status-bar'; status.textContent = '✅ Image Generated Successfully';
+        out.innerHTML = `<img src="${url}" alt="Generated"><div style="margin-top:8px;font-size:10px;color:#888;">Prompt: "${input}"</div>`;
+      };
+      img.onerror = () => { throw new Error('Image generation failed'); };
+      img.src = url;
     } catch (e) {
-      out.innerHTML = `<span style="color:var(--error)">❌ Error: ${e.message}</span>`;
+      out.innerHTML = `<span style="color:var(--error)">❌ ${e.message}</span>`;
     }
     
-    btn.disabled = false;
-    btn.textContent = '🎬 Generate Video (Plan & Execute)';
+    btn.disabled = false; btn.textContent = 'Generate Image';
+  },
+
+  saveSettings() {
+    const key = document.getElementById('or-key').value.trim();
+    localStorage.setItem('aura_or_key', key);
+    const msg = document.getElementById('settings-msg');
+    msg.textContent = '✅ Configuration saved! Rotation engine updated.';
+    setTimeout(() => msg.textContent = '', 3000);
   }
 };
 
-/* ============================================
-   TERMINAL
-   ============================================ */
+// ==========================================
+// TERMINAL
+// ==========================================
 const AuraTerm = {
   run() {
-    const input = document.getElementById('term-input');
+    const input = document.getElementById('term-in');
     const body = document.getElementById('term-body');
     const cmd = input.value.trim();
     if (!cmd) return;
-    
+
     const line = document.createElement('div');
-    line.style.marginBottom = '6px';
     line.innerHTML = `<span style="color:var(--gold)">aura@nexus:~$</span> ${cmd}`;
     body.insertBefore(line, input.parentElement);
-    input.value = '';
-    
-    const output = document.createElement('div');
-    output.style.marginBottom = '6px';
-    output.style.color = '#0f0';
-    
+
+    const out = document.createElement('div');
+    out.style.marginBottom = '6px'; out.style.color = '#0f0';
+
     const c = cmd.split(' ')[0].toLowerCase();
-    if (c === 'help') output.textContent = 'Commands: help, ls, pwd, date, clear, neofetch, open [app]';
-    else if (c === 'ls') output.textContent = 'Desktop  Documents  AAS_Hub  Video_Studio  Terminal';
-    else if (c === 'pwd') output.textContent = '/home/aura';
-    else if (c === 'date') output.textContent = new Date().toString();
+    if (c === 'help') out.textContent = 'Commands: help, ls, pwd, date, clear, neofetch, open [app], providers';
+    else if (c === 'ls') out.textContent = 'Desktop  Documents  AI_Tools  Image_Gen  Settings  Terminal';
+    else if (c === 'pwd') out.textContent = '/home/aura';
+    else if (c === 'date') out.textContent = new Date().toString();
     else if (c === 'clear') { body.innerHTML = ''; input.parentElement.remove(); return; }
-    else if (c === 'neofetch') output.innerHTML = '⚡ AuraOS Nexus v7.0\nOS: AAS Core Edition\nKernel: AuraKernel 1.0\nAI Engine: Pollinations Cluster + Hugging Face';
-    else if (c === 'open') { Aura.openApp(cmd.split(' ')[1] || 'aas-hub'); output.textContent = 'Opening...'; }
-    else output.textContent = `Command not found: ${c}`;
-    
-    body.insertBefore(output, input.parentElement);
+    else if (c === 'neofetch') out.innerHTML = ' AuraOS v8.0\nOS: Rotation Engine Edition\nAI: Pollinations + OpenRouter Fallback\nStatus: Online & Auto-Rotating';
+    else if (c === 'providers') out.innerHTML = 'Active Providers:\n1. Pollinations (Free, No Key)\n2. OpenRouter (Free Tier Models, Requires Key in Settings)';
+    else if (c === 'open') { 
+      const app = cmd.split(' ')[1] || 'ai';
+      if (['ai', 'image', 'settings', 'terminal'].includes(app)) Aura.openApp(app);
+      out.textContent = 'Opening...';
+    }
+    else out.textContent = `Command not found: ${c}`;
+
+    body.insertBefore(out, input.parentElement);
+    input.value = '';
     body.scrollTop = body.scrollHeight;
   }
 };
@@ -633,4 +480,4 @@ const AuraTerm = {
 const Aura = new AuraOS();
 </script>
 </body>
-   </html>
+                                                                                                                                             </html>
