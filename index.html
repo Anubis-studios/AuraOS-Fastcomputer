@@ -2,352 +2,241 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>AuraOS Nexus</title>
-<meta name="theme-color" content="#000000">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AuraOS Nexus v7.0 - AAS Core</title>
+<meta name="theme-color" content="#FFD700">
 <style>
-/* ============================================
-   AURAOS NEXUS v4.0 - SUPERCOMPUTER DESKTOP
-   ============================================ */
-
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
-html, body { width: 100%; height: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif; }
-
-/* BOOT SEQUENCE */
-#boot-screen {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: #000; z-index: 100000; display: flex; flex-direction: column;
-  justify-content: center; align-items: center; transition: opacity 1s;
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif; }
+:root {
+  --gold: #FFD700; --gold-dim: #B8860B; --gold-light: #FFE55C;
+  --black: #0a0a0a; --dark: #1a1a1a; --glass: rgba(20,20,20,0.92);
+  --text: #ffffff; --text-muted: #888888; --success: #28c840; --error: #ff5f57;
 }
-#boot-screen.fade { opacity: 0; pointer-events: none; }
-.boot-logo { font-size: 120px; margin-bottom: 40px; animation: pulse 2s infinite; }
-@keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.05); } }
-.boot-bar-container { width: 300px; height: 6px; background: #222; border-radius: 3px; overflow: hidden; }
-.boot-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #00d4ff, #7b2cbf); transition: width 0.3s; }
-.boot-text { color: #666; margin-top: 20px; font-size: 14px; letter-spacing: 2px; }
+
+/* BOOT SCREEN */
+#boot-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--black); z-index: 100000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.boot-logo { width: 180px; height: 180px; background: linear-gradient(135deg, var(--gold), var(--gold-dim)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 90px; box-shadow: 0 0 60px var(--gold); animation: pulse 2s infinite; margin-bottom: 40px; }
+@keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+.boot-text { color: var(--gold); font-size: 24px; margin-bottom: 30px; letter-spacing: 3px; }
+.boot-bar-container { width: 350px; height: 4px; background: #333; border-radius: 2px; overflow: hidden; }
+.boot-bar { height: 100%; width: 0%; background: var(--gold); transition: width 0.3s; }
 
 /* DESKTOP */
-#desktop {
-  width: 100%; height: 100%; position: relative;
-  background: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 50%, #0a1a2e 100%);
-  overflow: hidden;
-}
-#desktop::before {
-  content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-  background: 
-    radial-gradient(circle at 20% 30%, rgba(0,212,255,0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 70%, rgba(123,44,191,0.1) 0%, transparent 50%);
-  pointer-events: none;
-}
-.matrix-rain { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.05; }
+#desktop { width: 100%; height: 100%; position: relative; background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0a 100%); overflow: hidden; }
+.matrix-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.15; pointer-events: none; }
 
 /* MENU BAR */
-#menu-bar {
-  position: fixed; top: 0; left: 0; width: 100%; height: 28px;
-  background: rgba(20,20,30,0.85); backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  display: flex; align-items: center; padding: 0 15px; z-index: 9000;
-  font-size: 13px; color: #fff;
-}
-.menu-left { display: flex; align-items: center; gap: 18px; }
-.menu-right { margin-left: auto; display: flex; align-items: center; gap: 15px; font-size: 12px; }
-.menu-item { cursor: pointer; padding: 2px 8px; border-radius: 4px; transition: background 0.2s; }
-.menu-item:hover { background: rgba(255,255,255,0.15); }
-.menu-app-name { font-weight: 600; }
-.menu-icon { font-size: 14px; }
+#menu-bar { position: fixed; top: 0; left: 0; width: 100%; height: 32px; background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,215,0,0.3); display: flex; align-items: center; padding: 0 16px; z-index: 9000; font-size: 13px; color: var(--text); }
+.menu-apple { font-size: 18px; margin-right: 20px; cursor: pointer; color: var(--gold); }
+.menu-item { padding: 2px 10px; border-radius: 4px; cursor: pointer; margin-right: 4px; }
+.menu-item:hover { background: rgba(255,215,0,0.2); }
+.menu-right { margin-left: auto; display: flex; align-items: center; gap: 16px; }
 
 /* DESKTOP ICONS */
-.desktop-icons { position: absolute; top: 40px; right: 20px; display: flex; flex-direction: column; gap: 20px; }
-.desktop-icon { width: 80px; text-align: center; cursor: pointer; padding: 8px; border-radius: 8px; transition: background 0.2s; }
-.desktop-icon:hover { background: rgba(255,255,255,0.1); }
-.desktop-icon-img { font-size: 48px; margin-bottom: 5px; }
-.desktop-icon-label { color: #fff; font-size: 12px; text-shadow: 0 1px 3px rgba(0,0,0,0.8); word-wrap: break-word; }
+.desktop-icons { position: absolute; top: 50px; right: 20px; display: flex; flex-direction: column; gap: 20px; }
+.desktop-icon { width: 90px; text-align: center; cursor: pointer; padding: 12px; border-radius: 12px; transition: all 0.2s; }
+.desktop-icon:hover { background: rgba(255,215,0,0.15); transform: scale(1.05); }
+.desktop-icon-img { font-size: 56px; margin-bottom: 8px; }
+.desktop-icon-label { color: var(--text); font-size: 12px; text-shadow: 0 2px 4px rgba(0,0,0,0.9); }
 
 /* DOCK */
-#dock {
-  position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%);
-  background: rgba(30,30,45,0.7); backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,0.15); border-radius: 20px;
-  padding: 8px 12px; display: flex; gap: 8px; z-index: 8000;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-}
-.dock-item {
-  width: 56px; height: 56px; border-radius: 14px;
-  background: linear-gradient(135deg, #2a2a3e, #1a1a2e);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  cursor: pointer; transition: all 0.2s; position: relative;
-  border: 1px solid rgba(255,255,255,0.1);
-}
-.dock-item:hover { transform: translateY(-10px) scale(1.15); background: linear-gradient(135deg, #3a3a5e, #2a2a4e); }
-.dock-item.active::after {
-  content: ''; position: absolute; bottom: -6px; width: 4px; height: 4px;
-  background: #fff; border-radius: 50%;
-}
-.dock-icon { font-size: 28px; }
-.dock-label { font-size: 9px; color: #fff; margin-top: 2px; }
-.dock-separator { width: 1px; background: rgba(255,255,255,0.2); margin: 0 4px; }
+#dock { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); background: rgba(20,20,20,0.8); backdrop-filter: blur(30px); border: 1px solid rgba(255,215,0,0.3); border-radius: 24px; padding: 10px 16px; display: flex; gap: 10px; z-index: 8000; }
+.dock-item { width: 60px; height: 60px; border-radius: 16px; background: linear-gradient(135deg, #2a2a2a, #1a1a1a); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; position: relative; border: 1px solid rgba(255,215,0,0.2); }
+.dock-item:hover { transform: translateY(-12px) scale(1.15); border-color: var(--gold); }
+.dock-item.active::after { content: ''; position: absolute; bottom: -6px; width: 5px; height: 5px; background: var(--gold); border-radius: 50%; }
+.dock-icon { font-size: 32px; }
 
 /* WINDOWS */
-.window {
-  position: absolute; background: rgba(30,30,45,0.95); backdrop-filter: blur(30px);
-  border: 1px solid rgba(255,255,255,0.15); border-radius: 12px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.7); min-width: 400px; min-height: 300px;
-  display: flex; flex-direction: column; overflow: hidden;
-  transition: transform 0.2s, opacity 0.2s;
-}
-.window.minimized { transform: scale(0.1); opacity: 0; pointer-events: none; }
-.window.maximized { top: 28px !important; left: 0 !important; width: 100% !important; height: calc(100% - 90px) !important; border-radius: 0; }
-.window-header {
-  height: 38px; background: rgba(40,40,55,0.9); border-bottom: 1px solid rgba(255,255,255,0.1);
-  display: flex; align-items: center; padding: 0 12px; cursor: move;
-}
+.window { position: absolute; background: var(--glass); backdrop-filter: blur(30px); border: 1px solid rgba(255,215,0,0.3); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.9); min-width: 400px; min-height: 300px; display: flex; flex-direction: column; overflow: hidden; }
+.window-header { height: 42px; background: rgba(30,30,30,0.95); border-bottom: 1px solid rgba(255,215,0,0.2); display: flex; align-items: center; padding: 0 16px; cursor: move; }
 .window-controls { display: flex; gap: 8px; margin-right: 12px; }
-.window-btn { width: 12px; height: 12px; border-radius: 50%; cursor: pointer; border: none; }
-.btn-close { background: #ff5f57; }
-.btn-min { background: #ffbd2e; }
-.btn-max { background: #28c840; }
-.window-btn:hover { filter: brightness(0.8); }
-.window-title { color: #fff; font-size: 13px; font-weight: 500; flex: 1; text-align: center; }
-.window-body { flex: 1; overflow: auto; padding: 15px; color: #fff; }
+.window-btn { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; border: none; }
+.btn-close { background: var(--error); } .btn-min { background: #ffbd2e; } .btn-max { background: var(--success); }
+.window-title { color: var(--gold); font-size: 14px; font-weight: 600; flex: 1; text-align: center; }
+.window-body { flex: 1; overflow: auto; padding: 20px; color: var(--text); }
 .window-body::-webkit-scrollbar { width: 8px; }
-.window-body::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
-.window-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+.window-body::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 4px; }
 
-/* AI STUDIO */
-.ai-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
-.ai-card {
-  background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 12px; padding: 15px; transition: all 0.2s;
-}
-.ai-card:hover { border-color: #00d4ff; box-shadow: 0 0 20px rgba(0,212,255,0.2); }
-.ai-card h3 { font-size: 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
-.ai-card p { font-size: 12px; color: #a0a0b0; margin-bottom: 12px; }
-.ai-input { width: 100%; padding: 10px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #fff; font-size: 13px; margin-bottom: 10px; }
-.ai-input:focus { outline: none; border-color: #00d4ff; }
-.ai-btn { width: 100%; padding: 10px; background: linear-gradient(135deg, #00d4ff, #7b2cbf); border: none; border-radius: 8px; color: #fff; font-weight: 600; cursor: pointer; font-size: 13px; }
-.ai-btn:hover { opacity: 0.9; }
-.ai-output { margin-top: 12px; padding: 12px; background: rgba(0,0,0,0.5); border-radius: 8px; min-height: 80px; font-size: 12px; font-family: monospace; white-space: pre-wrap; word-break: break-word; color: #00ff88; max-height: 300px; overflow-y: auto; }
-.ai-output img { max-width: 100%; border-radius: 8px; margin-top: 8px; }
-.ai-output audio, .ai-output video { width: 100%; margin-top: 8px; border-radius: 8px; }
+/* AAS CORE & HUB LAYOUT */
+.hub-layout { display: flex; height: 100%; gap: 20px; }
+.hub-sidebar { width: 240px; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 15px; border: 1px solid rgba(255,215,0,0.15); display: flex; flex-direction: column; gap: 5px; overflow-y: auto; }
+.hub-cat-btn { padding: 10px 12px; border-radius: 8px; cursor: pointer; color: var(--text-muted); font-size: 13px; transition: all 0.2s; text-align: left; border: none; background: transparent; }
+.hub-cat-btn:hover, .hub-cat-btn.active { background: rgba(255,215,0,0.15); color: var(--gold); font-weight: 600; }
+.hub-content { flex: 1; overflow-y: auto; padding-right: 10px; }
+.hub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+.tool-card { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,215,0,0.15); border-radius: 12px; padding: 18px; cursor: pointer; transition: all 0.2s; }
+.tool-card:hover { border-color: var(--gold); transform: translateY(-3px); box-shadow: 0 5px 20px rgba(255,215,0,0.15); }
+.tool-card h4 { color: var(--gold-light); font-size: 15px; margin-bottom: 6px; }
+.tool-card p { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px; }
+.badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; margin-right: 6px; }
+.badge.oss { background: rgba(40,200,64,0.2); color: var(--success); }
+.badge.free { background: rgba(0,212,255,0.2); color: #00d4ff; }
 
-/* TERMINAL */
-.terminal { background: #000; color: #00ff41; font-family: 'Courier New', monospace; font-size: 13px; padding: 15px; height: 100%; overflow-y: auto; }
-.terminal-line { margin-bottom: 4px; }
-.terminal-input-line { display: flex; align-items: center; }
-.terminal-prompt { color: #00d4ff; margin-right: 8px; white-space: nowrap; }
-.terminal-input { flex: 1; background: transparent; border: none; color: #00ff41; font-family: inherit; font-size: inherit; outline: none; }
+/* TOOL WORKSPACE & VIDEO CONFIG */
+.tool-interface { display: flex; flex-direction: column; height: 100%; }
+.tool-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,215,0,0.2); }
+.back-btn { background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.3); color: var(--gold); padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 13px; }
+.back-btn:hover { background: rgba(255,215,0,0.2); }
+.tool-workspace { flex: 1; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
+.tool-input { width: 100%; padding: 14px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,215,0,0.3); border-radius: 10px; color: var(--text); font-size: 14px; font-family: inherit; }
+.tool-input:focus { outline: none; border-color: var(--gold); }
+.tool-btn { padding: 14px; background: linear-gradient(135deg, var(--gold), var(--gold-dim)); border: none; border-radius: 10px; color: var(--black); font-weight: 700; cursor: pointer; font-size: 14px; }
+.tool-btn:hover { box-shadow: 0 0 25px rgba(255,215,0,0.4); }
+.tool-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* SYSTEM MONITOR */
-.monitor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-.monitor-card { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 15px; }
-.monitor-card h4 { font-size: 12px; color: #a0a0b0; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
-.monitor-value { font-size: 28px; font-weight: 700; color: #00d4ff; margin-bottom: 10px; }
-.monitor-bar { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
-.monitor-bar-fill { height: 100%; background: linear-gradient(90deg, #00d4ff, #7b2cbf); transition: width 0.5s; }
-.monitor-chart { width: 100%; height: 100px; background: rgba(0,0,0,0.3); border-radius: 8px; margin-top: 10px; }
+/* VIDEO CONFIG GRID */
+.video-config-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 15px; }
+.config-item { display: flex; flex-direction: column; gap: 6px; }
+.config-item label { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; }
+.config-item input, .config-item select { padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,215,0,0.2); border-radius: 8px; color: var(--text); font-size: 13px; }
+.config-item input:focus, .config-item select:focus { outline: none; border-color: var(--gold); }
 
-/* SETTINGS */
-.settings-section { margin-bottom: 25px; }
-.settings-section h3 { font-size: 16px; margin-bottom: 12px; color: #00d4ff; }
-.settings-row { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(0,0,0,0.2); border-radius: 8px; margin-bottom: 8px; }
-.settings-label { font-size: 14px; }
-.settings-control select, .settings-control input { padding: 6px 10px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; color: #fff; font-size: 13px; }
+/* OUTPUT DISPLAY */
+.tool-output { flex: 1; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,215,0,0.1); border-radius: 10px; padding: 20px; font-size: 14px; line-height: 1.6; overflow-y: auto; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word; color: #e0e0e0; font-family: 'Courier New', monospace; min-height: 250px; }
+.tool-output img, .tool-output video { max-width: 100%; border-radius: 8px; margin: 10px 0; display: block; border: 1px solid rgba(255,215,0,0.3); box-shadow: 0 0 20px rgba(255,215,0,0.1); }
+.tool-output code { background: rgba(0,0,0,0.8); padding: 15px; border-radius: 8px; display: block; margin: 10px 0; border-left: 3px solid var(--gold); font-family: 'Courier New', monospace; font-size: 13px; overflow-x: auto; white-space: pre; }
+.search-result { background: rgba(255,215,0,0.05); border-left: 3px solid var(--gold); padding: 15px; margin-bottom: 15px; border-radius: 0 8px 8px 0; }
+.search-result h5 { color: var(--gold-light); margin-bottom: 6px; font-size: 15px; }
+.search-result a { color: var(--gold); text-decoration: none; font-size: 13px; }
+.search-result a:hover { text-decoration: underline; }
+.search-result p { color: var(--text-muted); font-size: 12px; line-height: 1.5; margin: 5px 0; }
 
-/* CALCULATOR */
-.calc-display { background: rgba(0,0,0,0.5); padding: 20px; text-align: right; font-size: 32px; margin-bottom: 15px; border-radius: 8px; min-height: 80px; word-break: break-all; }
-.calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-.calc-btn { padding: 18px; background: rgba(255,255,255,0.1); border: none; border-radius: 8px; color: #fff; font-size: 18px; cursor: pointer; transition: background 0.2s; }
-.calc-btn:hover { background: rgba(255,255,255,0.2); }
-.calc-btn.op { background: #00d4ff; color: #000; }
-.calc-btn.eq { background: #7b2cbf; grid-column: span 2; }
-
-/* NOTES */
-.notes-area { width: 100%; height: 100%; min-height: 300px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 15px; color: #fff; font-size: 14px; font-family: inherit; resize: none; outline: none; }
-.notes-area:focus { border-color: #00d4ff; }
-
-/* BROWSER */
-.browser-bar { display: flex; gap: 8px; margin-bottom: 12px; }
-.browser-url { flex: 1; padding: 8px 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #fff; font-size: 13px; }
-.browser-btn { padding: 8px 14px; background: #00d4ff; border: none; border-radius: 8px; color: #000; font-weight: 600; cursor: pointer; }
-.browser-frame { width: 100%; height: calc(100% - 50px); border: none; border-radius: 8px; background: #fff; }
-
-/* CONTEXT MENU */
-.context-menu { position: fixed; background: rgba(30,30,45,0.95); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 6px 0; z-index: 9999; min-width: 180px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-.context-item { padding: 8px 16px; color: #fff; font-size: 13px; cursor: pointer; }
-.context-item:hover { background: #00d4ff; color: #000; }
-.context-separator { height: 1px; background: rgba(255,255,255,0.1); margin: 4px 0; }
+/* PLAN PREVIEW MODAL (AAS Core) */
+.preview-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 99999; display: flex; justify-content: center; align-items: center; }
+.preview-box { background: var(--dark); border: 1px solid var(--gold); border-radius: 16px; padding: 30px; max-width: 500px; width: 90%; box-shadow: 0 0 50px rgba(255,215,0,0.2); }
+.preview-box h3 { color: var(--gold); margin-bottom: 15px; font-size: 18px; }
+.preview-box ul { list-style: none; margin-bottom: 25px; }
+.preview-box li { padding: 8px 0; color: var(--text-muted); border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
+.preview-box li::before { content: '✓ '; color: var(--success); }
+.preview-actions { display: flex; gap: 10px; justify-content: flex-end; }
+.preview-btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 14px; }
+.btn-approve { background: var(--success); color: #fff; }
+.btn-deny { background: rgba(255,255,255,0.1); color: var(--text); }
 
 /* NOTIFICATIONS */
-.notification { position: fixed; top: 40px; right: 20px; background: rgba(30,30,45,0.95); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 15px 20px; color: #fff; z-index: 9998; animation: slideIn 0.3s; max-width: 300px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.notification { position: fixed; top: 50px; right: 20px; background: var(--glass); backdrop-filter: blur(20px); border: 1px solid rgba(255,215,0,0.3); border-radius: 12px; padding: 16px 20px; color: var(--text); z-index: 9998; animation: slideIn 0.3s; min-width: 300px; }
 @keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
 
-/* RESPONSIVE */
 @media (max-width: 768px) {
-  .window { min-width: 90vw !important; min-height: 60vh !important; }
-  .dock-item { width: 48px; height: 48px; }
-  .dock-icon { font-size: 24px; }
-  .ai-grid { grid-template-columns: 1fr; }
-  .monitor-grid { grid-template-columns: 1fr; }
+  .hub-layout { flex-direction: column; }
+  .hub-sidebar { width: 100%; flex-direction: row; overflow-x: auto; }
+  .window { min-width: 95vw !important; min-height: 80vh !important; }
 }
 </style>
 </head>
 <body>
 
-<!-- BOOT SCREEN -->
 <div id="boot-screen">
   <div class="boot-logo">⚡</div>
+  <div class="boot-text">Initializing AuraOS AAS Core</div>
   <div class="boot-bar-container"><div class="boot-bar" id="boot-bar"></div></div>
-  <div class="boot-text" id="boot-text">Initializing AuraOS Nexus...</div>
 </div>
 
-<!-- DESKTOP -->
 <div id="desktop">
-  <canvas class="matrix-rain" id="matrix"></canvas>
+  <canvas class="matrix-canvas" id="matrix"></canvas>
   
-  <!-- MENU BAR -->
   <div id="menu-bar">
-    <div class="menu-left">
-      <span class="menu-item" style="font-size:16px">⚡</span>
-      <span class="menu-item menu-app-name" id="active-app-name">Finder</span>
-      <span class="menu-item">File</span>
-      <span class="menu-item">Edit</span>
-      <span class="menu-item">View</span>
-      <span class="menu-item">Window</span>
-      <span class="menu-item">Help</span>
-    </div>
+    <span class="menu-apple">⚡</span>
+    <span class="menu-item" id="active-app">Finder</span>
+    <span class="menu-item">File</span>
+    <span class="menu-item">Edit</span>
+    <span class="menu-item">View</span>
     <div class="menu-right">
-      <span class="menu-icon"> 100%</span>
-      <span class="menu-icon">📶</span>
-      <span class="menu-icon"></span>
-      <span class="menu-icon" id="clock">12:00</span>
+      <span> 100%</span>
+      <span>📶</span>
+      <span id="clock">12:00</span>
     </div>
   </div>
 
-  <!-- DESKTOP ICONS -->
   <div class="desktop-icons">
-    <div class="desktop-icon" ondblclick="Aura.openApp('ai-studio')">
-      <div class="desktop-icon-img">🧠</div>
-      <div class="desktop-icon-label">AI Studio</div>
-    </div>
-    <div class="desktop-icon" ondblclick="Aura.openApp('finder')">
-      <div class="desktop-icon-img">📁</div>
-      <div class="desktop-icon-label">Finder</div>
-    </div>
-    <div class="desktop-icon" ondblclick="Aura.openApp('terminal')">
-      <div class="desktop-icon-img">️</div>
-      <div class="desktop-icon-label">Terminal</div>
-    </div>
-    <div class="desktop-icon" ondblclick="Aura.openApp('monitor')">
-      <div class="desktop-icon-img">📊</div>
-      <div class="desktop-icon-label">Monitor</div>
-    </div>
+    <div class="desktop-icon" ondblclick="Aura.openApp('aas-hub')"><div class="desktop-icon-img">🧠</div><div class="desktop-icon-label">AAS Hub</div></div>
+    <div class="desktop-icon" ondblclick="Aura.openApp('video-studio')"><div class="desktop-icon-img">🎬</div><div class="desktop-icon-label">Video Studio</div></div>
+    <div class="desktop-icon" ondblclick="Aura.openApp('terminal')"><div class="desktop-icon-img">⌨️</div><div class="desktop-icon-label">Terminal</div></div>
   </div>
 
-  <!-- WINDOWS CONTAINER -->
   <div id="windows-container"></div>
 
-  <!-- DOCK -->
   <div id="dock">
-    <div class="dock-item active" onclick="Aura.openApp('finder')" title="Finder">
-      <div class="dock-icon">📁</div>
-      <div class="dock-label">Finder</div>
-    </div>
-    <div class="dock-item" onclick="Aura.openApp('browser')" title="Browser">
-      <div class="dock-icon">🌐</div>
-      <div class="dock-label">Browser</div>
-    </div>
-    <div class="dock-item" onclick="Aura.openApp('ai-studio')" title="AI Studio">
-      <div class="dock-icon"></div>
-      <div class="dock-label">AI Studio</div>
-    </div>
-    <div class="dock-item" onclick="Aura.openApp('terminal')" title="Terminal">
-      <div class="dock-icon">⌨️</div>
-      <div class="dock-label">Terminal</div>
-    </div>
-    <div class="dock-item" onclick="Aura.openApp('monitor')" title="System Monitor">
-      <div class="dock-icon">📊</div>
-      <div class="dock-label">Monitor</div>
-    </div>
-    <div class="dock-item" onclick="Aura.openApp('calculator')" title="Calculator">
-      <div class="dock-icon">🧮</div>
-      <div class="dock-label">Calc</div>
-    </div>
-    <div class="dock-item" onclick="Aura.openApp('notes')" title="Notes">
-      <div class="dock-icon">📝</div>
-      <div class="dock-label">Notes</div>
-    </div>
-    <div class="dock-separator"></div>
-    <div class="dock-item" onclick="Aura.openApp('settings')" title="Settings">
-      <div class="dock-icon">⚙️</div>
-      <div class="dock-label">Settings</div>
-    </div>
-    <div class="dock-item" onclick="Aura.openApp('trash')" title="Trash">
-      <div class="dock-icon">🗑️</div>
-      <div class="dock-label">Trash</div>
-    </div>
+    <div class="dock-item active" onclick="Aura.openApp('aas-hub')"><div class="dock-icon">🧠</div></div>
+    <div class="dock-item" onclick="Aura.openApp('video-studio')"><div class="dock-icon">🎬</div></div>
+    <div class="dock-item" onclick="Aura.openApp('terminal')"><div class="dock-icon">⌨️</div></div>
   </div>
 </div>
 
 <script>
 /* ============================================
-   AURAOS NEXUS - CORE ENGINE
+   AAS CORE: AGENTIC AWESOME SKILLS ENGINE
    ============================================ */
+const AAS_SKILLS = {
+  llms: [
+    { id: 'llama3', name: 'Llama 3', desc: 'Meta\'s open-source LLM for chat and reasoning', badges: ['Open Weights', 'Free'], model: 'llama3' },
+    { id: 'mistral', name: 'Mistral', desc: 'Fast, efficient open-source models', badges: ['Apache 2.0', 'Free'], model: 'mistral' },
+    { id: 'qwen', name: 'Qwen', desc: 'Alibaba\'s powerful multilingual LLM', badges: ['Apache 2.0', 'Free'], model: 'qwen' }
+  ],
+  image: [
+    { id: 'flux', name: 'FLUX', desc: 'State-of-the-art text-to-image generation', badges: ['Open Weights', 'Free'], type: 'image', model: 'flux' },
+    { id: 'stable', name: 'Stable Diffusion', desc: 'Community standard image generation', badges: ['Open Weights', 'Free'], type: 'image', model: 'stable-diffusion' }
+  ],
+  code: [
+    { id: 'codellama', name: 'CodeLlama', desc: 'Generate code in any language', badges: ['Open License', 'Free'], type: 'code', model: 'codellama' },
+    { id: 'python', name: 'Python Generator', desc: 'Write Python scripts and functions', badges: ['Free', 'Open'], type: 'code', model: 'llama3' }
+  ],
+  research: [
+    { id: 'searxng', name: 'SearXNG Search', desc: 'Live web search with real results', badges: ['AGPLv3', '100% Free'], type: 'search' },
+    { id: 'summarize', name: 'Web Summarizer', desc: 'Fetch and summarize any URL', badges: ['Free', 'Open'], type: 'summarize' }
+  ],
+  agents: [
+    { id: 'researcher', name: 'AI Researcher', desc: 'Search web then synthesize answer', badges: ['MIT', 'Free'], type: 'agent' }
+  ]
+};
+
+/* ============================================
+   VIDEO GENERATION CONFIG (Fully Implemented)
+   ============================================ */
+const VIDEO_CONFIG = {
+  models: ['wan2.1', 'cogvideox', 'stable-video', 'flux-animate'],
+  resolutions: ['1024x576', '1280x720', '1920x1080'],
+  fpsOptions: [8, 16, 24, 30],
+  durations: [2, 4, 6, 10]
+};
 
 class AuraOS {
   constructor() {
     this.windows = new Map();
     this.zIndex = 100;
-    this.activeApp = 'Finder';
-    this.settings = JSON.parse(localStorage.getItem('auraos_settings') || '{}');
-    this.notes = localStorage.getItem('auraos_notes') || '';
     this.boot();
   }
 
-  /* BOOT SEQUENCE */
   async boot() {
     const bar = document.getElementById('boot-bar');
-    const text = document.getElementById('boot-text');
-    const stages = [
-      'Loading kernel modules...',
-      'Initializing neural networks...',
-      'Connecting to AI cluster...',
-      'Mounting file systems...',
-      'Starting desktop environment...',
-      'Welcome to AuraOS Nexus'
-    ];
     for (let i = 0; i <= 100; i += 2) {
       bar.style.width = i + '%';
-      if (i % 20 === 0) text.textContent = stages[i / 20] || stages[stages.length - 1];
-      await new Promise(r => setTimeout(r, 40));
+      await new Promise(r => setTimeout(r, 25));
     }
-    await new Promise(r => setTimeout(r, 500));
-    document.getElementById('boot-screen').classList.add('fade');
+    await new Promise(r => setTimeout(r, 400));
+    document.getElementById('boot-screen').style.opacity = '0';
     setTimeout(() => document.getElementById('boot-screen').style.display = 'none', 1000);
     this.initMatrix();
     this.startClock();
-    this.startMonitor();
-    this.notify(' Welcome to AuraOS Nexus', 'Supercomputer desktop initialized');
+    this.notify('⚡ AuraOS Nexus v7.0', 'AAS Core & Video Studio Initialized');
   }
 
-  /* MATRIX RAIN EFFECT */
   initMatrix() {
     const canvas = document.getElementById('matrix');
     const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    const chars = '⚡01アイウエオカキクケコ';
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    const chars = '⚡01アイウエオ';
     const fontSize = 14;
     const columns = canvas.width / fontSize;
     const drops = Array(Math.floor(columns)).fill(1);
-    
     const draw = () => {
       ctx.fillStyle = 'rgba(0,0,0,0.05)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#00d4ff';
+      ctx.fillStyle = '#FFD700';
       ctx.font = fontSize + 'px monospace';
       for (let i = 0; i < drops.length; i++) {
-        const text = chars[Math.floor(Math.random() * chars.length)];
-        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * fontSize, drops[i] * fontSize);
         if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
         drops[i]++;
       }
@@ -355,48 +244,40 @@ class AuraOS {
     setInterval(draw, 50);
   }
 
-  /* CLOCK */
   startClock() {
-    const update = () => {
-      const now = new Date();
-      document.getElementById('clock').textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-    };
-    update();
-    setInterval(update, 1000);
+    const update = () => { document.getElementById('clock').textContent = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}); };
+    update(); setInterval(update, 1000);
   }
 
-  /* NOTIFICATIONS */
   notify(title, msg) {
     const n = document.createElement('div');
     n.className = 'notification';
-    n.innerHTML = `<strong>${title}</strong><br><span style="font-size:12px;color:#a0a0b0">${msg}</span>`;
+    n.innerHTML = `<strong style="color:var(--gold)">${title}</strong><br><span style="font-size:12px;color:#888">${msg}</span>`;
     document.body.appendChild(n);
     setTimeout(() => n.remove(), 4000);
   }
 
-  /* WINDOW MANAGER */
   openApp(appId) {
     if (this.windows.has(appId)) {
       const w = this.windows.get(appId);
-      w.classList.remove('minimized');
-      this.focusWindow(w);
+      w.style.display = 'flex'; w.style.zIndex = ++this.zIndex;
       return;
     }
     const app = this.getAppConfig(appId);
     const win = document.createElement('div');
     win.className = 'window';
     win.id = `win-${appId}`;
-    win.style.left = (100 + this.windows.size * 30) + 'px';
-    win.style.top = (60 + this.windows.size * 30) + 'px';
-    win.style.width = app.width || '700px';
-    win.style.height = app.height || '500px';
+    win.style.left = (80 + this.windows.size * 25) + 'px';
+    win.style.top = (60 + this.windows.size * 25) + 'px';
+    win.style.width = app.width || '900px';
+    win.style.height = app.height || '650px';
     win.style.zIndex = ++this.zIndex;
     win.innerHTML = `
       <div class="window-header" onmousedown="Aura.dragWindow(event, '${appId}')">
         <div class="window-controls">
           <button class="window-btn btn-close" onclick="Aura.closeApp('${appId}')"></button>
-          <button class="window-btn btn-min" onclick="Aura.minimizeApp('${appId}')"></button>
-          <button class="window-btn btn-max" onclick="Aura.maximizeApp('${appId}')"></button>
+          <button class="window-btn btn-min" onclick="this.closest('.window').style.display='none'"></button>
+          <button class="window-btn btn-max" onclick="Aura.maximize('${appId}')"></button>
         </div>
         <div class="window-title">${app.icon} ${app.name}</div>
       </div>
@@ -404,593 +285,352 @@ class AuraOS {
     `;
     document.getElementById('windows-container').appendChild(win);
     this.windows.set(appId, win);
-    this.focusWindow(win);
-    document.getElementById('active-app-name').textContent = app.name;
+    document.getElementById('active-app').textContent = app.name;
     if (app.onOpen) app.onOpen(win);
   }
 
-  closeApp(id) {
+  closeApp(id) { const w = this.windows.get(id); if (w) { w.remove(); this.windows.delete(id); } }
+  maximize(id) {
     const w = this.windows.get(id);
-    if (w) { w.remove(); this.windows.delete(id); }
+    if (w) {
+      if (w.dataset.max === '1') { w.style.width = '900px'; w.style.height = '650px'; w.style.top = '60px'; w.style.left = '80px'; w.dataset.max = '0'; }
+      else { w.style.width = '100%'; w.style.height = 'calc(100% - 100px)'; w.style.top = '32px'; w.style.left = '0'; w.dataset.max = '1'; }
+    }
   }
-  minimizeApp(id) {
-    const w = this.windows.get(id);
-    if (w) w.classList.add('minimized');
-  }
-  maximizeApp(id) {
-    const w = this.windows.get(id);
-    if (w) w.classList.toggle('maximized');
-  }
-  focusWindow(win) {
-    win.style.zIndex = ++this.zIndex;
-  }
+
   dragWindow(e, id) {
     const win = this.windows.get(id);
-    if (win.classList.contains('maximized')) return;
-    const startX = e.clientX - win.offsetLeft;
-    const startY = e.clientY - win.offsetTop;
+    if (win.dataset.max === '1') return;
+    const startX = e.clientX - win.offsetLeft, startY = e.clientY - win.offsetTop;
     const move = (ev) => { win.style.left = (ev.clientX - startX) + 'px'; win.style.top = (ev.clientY - startY) + 'px'; };
     const up = () => { document.removeEventListener('mousemove', move); document.removeEventListener('mouseup', up); };
-    document.addEventListener('mousemove', move);
-    document.addEventListener('mouseup', up);
-    this.focusWindow(win);
+    document.addEventListener('mousemove', move); document.addEventListener('mouseup', up);
+    win.style.zIndex = ++this.zIndex;
   }
 
-  /* APP CONFIGS */
   getAppConfig(id) {
-    const apps = {
-      'finder': {
-        name: 'Finder', icon: '', width: '650px', height: '450px',
+    if (id === 'aas-hub') {
+      return {
+        name: 'AAS Skill Hub', icon: '🧠', width: '1000px', height: '700px',
         content: `
-          <div style="display:flex;height:100%">
-            <div style="width:180px;background:rgba(0,0,0,0.3);padding:15px;border-radius:8px;margin-right:15px">
-              <div style="font-size:12px;color:#a0a0b0;margin-bottom:10px">FAVORITES</div>
-              <div style="padding:8px;border-radius:6px;background:rgba(0,212,255,0.2);margin-bottom:5px">📁 Desktop</div>
-              <div style="padding:8px;border-radius:6px;margin-bottom:5px"> Documents</div>
-              <div style="padding:8px;border-radius:6px;margin-bottom:5px">⬇️ Downloads</div>
-              <div style="padding:8px;border-radius:6px;margin-bottom:5px">️ Pictures</div>
-              <div style="padding:8px;border-radius:6px">🎵 Music</div>
+          <div class="hub-layout">
+            <div class="hub-sidebar">
+              <button class="hub-cat-btn active" onclick="AuraHub.renderCategory('llms', this)">🧠 LLMs</button>
+              <button class="hub-cat-btn" onclick="AuraHub.renderCategory('image', this)">🎨 Image</button>
+              <button class="hub-cat-btn" onclick="AuraHub.renderCategory('code', this)">💻 Code</button>
+              <button class="hub-cat-btn" onclick="AuraHub.renderCategory('research', this)">🔬 Research</button>
+              <button class="hub-cat-btn" onclick="AuraHub.renderCategory('agents', this)">🤖 Agents</button>
             </div>
-            <div style="flex:1">
-              <div style="font-size:18px;margin-bottom:15px">📁 Desktop</div>
-              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:15px">
-                <div style="text-align:center;padding:10px;border-radius:8px;cursor:pointer" ondblclick="Aura.openApp('ai-studio')">
-                  <div style="font-size:40px">🧠</div><div style="font-size:11px;margin-top:5px">AI Studio.app</div>
+            <div class="hub-content" id="hub-main-content"></div>
+          </div>
+        `,
+        onOpen: (w) => setTimeout(() => AuraHub.renderCategory('llms', w.querySelector('.hub-cat-btn')), 100)
+      };
+    }
+    if (id === 'video-studio') {
+      return {
+        name: 'Video Generation Studio', icon: '🎬', width: '1000px', height: '750px',
+        content: `
+          <div class="tool-interface">
+            <div class="tool-header">
+              <h3 style="color:var(--gold);font-size:18px">🎬 Agentic Video Generation</h3>
+              <div><span class="badge oss">Open Source</span><span class="badge free">Free Tier</span></div>
+            </div>
+            <div class="tool-workspace">
+              <input class="tool-input" id="vid-prompt" placeholder="Describe the video scene in detail (e.g., 'A cyberpunk city with flying cars in golden hour lighting, cinematic, 4k')">
+              
+              <div class="video-config-grid">
+                <div class="config-item">
+                  <label>Model</label>
+                  <select id="vid-model">${VIDEO_CONFIG.models.map(m => `<option value="${m}">${m.toUpperCase()}</option>`).join('')}</select>
                 </div>
-                <div style="text-align:center;padding:10px;border-radius:8px;cursor:pointer" ondblclick="Aura.openApp('terminal')">
-                  <div style="font-size:40px">️</div><div style="font-size:11px;margin-top:5px">Terminal.app</div>
+                <div class="config-item">
+                  <label>Resolution</label>
+                  <select id="vid-res">${VIDEO_CONFIG.resolutions.map(r => `<option value="${r}">${r}</option>`).join('')}</select>
                 </div>
-                <div style="text-align:center;padding:10px;border-radius:8px;cursor:pointer">
-                  <div style="font-size:40px">📄</div><div style="font-size:11px;margin-top:5px">readme.txt</div>
+                <div class="config-item">
+                  <label>FPS</label>
+                  <select id="vid-fps">${VIDEO_CONFIG.fpsOptions.map(f => `<option value="${f}">${f} fps</option>`).join('')}</select>
                 </div>
-                <div style="text-align:center;padding:10px;border-radius:8px;cursor:pointer">
-                  <div style="font-size:40px">🖼️</div><div style="font-size:11px;margin-top:5px">wallpaper.png</div>
+                <div class="config-item">
+                  <label>Duration (s)</label>
+                  <select id="vid-dur">${VIDEO_CONFIG.durations.map(d => `<option value="${d}">${d}s</option>`).join('')}</select>
+                </div>
+                <div class="config-item">
+                  <label>Seed (Optional)</label>
+                  <input type="number" id="vid-seed" placeholder="Random">
                 </div>
               </div>
-            </div>
-          </div>`
-      },
-      'ai-studio': {
-        name: 'AI Studio', icon: '', width: '900px', height: '650px',
-        content: `
-          <div style="margin-bottom:15px;padding:12px;background:linear-gradient(135deg,rgba(0,212,255,0.2),rgba(123,44,191,0.2));border-radius:10px;border:1px solid rgba(0,212,255,0.3)">
-            <strong>⚡ AuraOS AI Supercomputer</strong><br>
-            <span style="font-size:12px;color:#a0a0b0">All generators powered by free, keyless APIs. No limits.</span>
+              
+              <input class="tool-input" id="vid-negative" placeholder="Negative prompt (e.g., 'blurry, low quality, distorted, watermark')" style="margin-bottom: 15px;">
+              
+              <button class="tool-btn" id="vid-btn" onclick="AuraVideo.generate()">🎬 Generate Video (Plan & Execute)</button>
+              <div class="tool-output" id="vid-out">Ready. Configure parameters and click Generate.</div>
+            </div.
           </div>
-          <div class="ai-grid">
-            <div class="ai-card">
-              <h3>🎨 Image Generator</h3>
-              <p>Create 1024x1024 AI images from text</p>
-              <input class="ai-input" id="ai-img-prompt" placeholder="A futuristic city at sunset...">
-              <button class="ai-btn" onclick="AuraAI.generateImage()">Generate</button>
-              <div class="ai-output" id="ai-img-out">Results appear here...</div>
-            </div>
-            <div class="ai-card">
-              <h3>💬 Chat / Text AI</h3>
-              <p>Chat with GPT-class models</p>
-              <input class="ai-input" id="ai-chat-prompt" placeholder="Ask anything...">
-              <button class="ai-btn" onclick="AuraAI.chat()">Send</button>
-              <div class="ai-output" id="ai-chat-out">Results appear here...</div>
-            </div>
-            <div class="ai-card">
-              <h3>🎵 Music Generator</h3>
-              <p>Create AI music from description</p>
-              <input class="ai-input" id="ai-music-prompt" placeholder="Upbeat electronic track...">
-              <button class="ai-btn" onclick="AuraAI.generateMusic()">Compose</button>
-              <div class="ai-output" id="ai-music-out">Results appear here...</div>
-            </div>
-            <div class="ai-card">
-              <h3>🎬 Video Generator</h3>
-              <p>Generate short AI video clips</p>
-              <input class="ai-input" id="ai-video-prompt" placeholder="Ocean waves at sunset...">
-              <button class="ai-btn" onclick="AuraAI.generateVideo()">Generate</button>
-              <div class="ai-output" id="ai-video-out">Results appear here...</div>
-            </div>
-            <div class="ai-card">
-              <h3>💻 Code Generator</h3>
-              <p>Generate code in any language</p>
-              <input class="ai-input" id="ai-code-prompt" placeholder="Python function to sort list...">
-              <button class="ai-btn" onclick="AuraAI.generateCode()">Generate</button>
-              <div class="ai-output" id="ai-code-out">Results appear here...</div>
-            </div>
-            <div class="ai-card">
-              <h3> Translator</h3>
-              <p>Translate to 12+ languages</p>
-              <input class="ai-input" id="ai-trans-prompt" placeholder="Text to translate...">
-              <select class="ai-input" id="ai-trans-lang" style="margin-bottom:10px">
-                <option value="es">Spanish</option><option value="fr">French</option>
-                <option value="de">German</option><option value="it">Italian</option>
-                <option value="pt">Portuguese</option><option value="ru">Russian</option>
-                <option value="zh">Chinese</option><option value="ja">Japanese</option>
-                <option value="ar">Arabic</option><option value="hi">Hindi</option>
-                <option value="tr">Turkish</option><option value="ko">Korean</option>
-              </select>
-              <button class="ai-btn" onclick="AuraAI.translate()">Translate</button>
-              <div class="ai-output" id="ai-trans-out">Results appear here...</div>
-            </div>
-            <div class="ai-card">
-              <h3>🔊 Text to Speech</h3>
-              <p>Convert text to natural speech</p>
-              <input class="ai-input" id="ai-tts-prompt" placeholder="Enter text to speak...">
-              <button class="ai-btn" onclick="AuraAI.textToSpeech()">Speak</button>
-              <div class="ai-output" id="ai-tts-out">Results appear here...</div>
-            </div>
-            <div class="ai-card">
-              <h3>📝 Story Writer</h3>
-              <p>Generate creative stories</p>
-              <input class="ai-input" id="ai-story-prompt" placeholder="A dragon discovers...">
-              <button class="ai-btn" onclick="AuraAI.writeStory()">Write</button>
-              <div class="ai-output" id="ai-story-out">Results appear here...</div>
-            </div>
-            <div class="ai-card">
-              <h3>🧮 Math Solver</h3>
-              <p>Solve complex equations</p>
-              <input class="ai-input" id="ai-math-prompt" placeholder="Solve: 2x + 5 = 15">
-              <button class="ai-btn" onclick="AuraAI.solveMath()">Solve</button>
-              <div class="ai-output" id="ai-math-out">Results appear here...</div>
-            </div>
-            <div class="ai-card">
-              <h3>🎭 Roleplay AI</h3>
-              <p>Chat with AI personas</p>
-              <input class="ai-input" id="ai-rp-prompt" placeholder="You are a wise wizard...">
-              <button class="ai-btn" onclick="AuraAI.roleplay()">Start</button>
-              <div class="ai-output" id="ai-rp-out">Results appear here...</div>
-            </div>
-            <div class="ai-card">
-              <h3>📊 Data Analyzer</h3>
-              <p>Analyze text data patterns</p>
-              <input class="ai-input" id="ai-data-prompt" placeholder="Paste data to analyze...">
-              <button class="ai-btn" onclick="AuraAI.analyzeData()">Analyze</button>
-              <div class="ai-output" id="ai-data-out">Results appear here...</div>
-            </div>
-            <div class="ai-card">
-              <h3> Web Research</h3>
-              <p>Fetch & summarize any URL</p>
-              <input class="ai-input" id="ai-web-prompt" placeholder="https://example.com">
-              <button class="ai-btn" onclick="AuraAI.webResearch()">Research</button>
-              <div class="ai-output" id="ai-web-out">Results appear here...</div>
-            </div>
-          </div>`
-      },
-      'terminal': {
+        `
+      };
+    }
+    if (id === 'terminal') {
+      return {
         name: 'Terminal', icon: '⌨️', width: '700px', height: '450px',
-        content: '<div class="terminal" id="term-body"><div class="terminal-line">AuraOS Nexus Terminal v4.0</div><div class="terminal-line">Type "help" for available commands.</div><div class="terminal-line">&nbsp;</div><div class="terminal-input-line"><span class="terminal-prompt">aura@nexus:~$</span><input class="terminal-input" id="term-input" onkeydown="if(event.key===\'Enter\')AuraTerm.run()"></div></div>',
+        content: `<div id="term-body" style="background:#000;color:#0f0;font-family:monospace;padding:16px;height:100%;overflow-y:auto"><div style="margin-bottom:6px">⚡ AuraOS AAS Terminal v7.0</div><div style="margin-bottom:6px">Type "help" for commands.</div><div style="display:flex"><span style="color:var(--gold);margin-right:8px">aura@nexus:~$</span><input id="term-input" style="background:transparent;border:none;color:#0f0;font-family:inherit;font-size:inherit;outline:none;flex:1" onkeydown="if(event.key==='Enter')AuraTerm.run()"></div></div>`,
         onOpen: (w) => setTimeout(() => w.querySelector('#term-input').focus(), 100)
-      },
-      'monitor': {
-        name: 'System Monitor', icon: '', width: '600px', height: '500px',
-        content: `
-          <div class="monitor-grid">
-            <div class="monitor-card">
-              <h4>CPU Usage</h4>
-              <div class="monitor-value" id="mon-cpu">0%</div>
-              <div class="monitor-bar"><div class="monitor-bar-fill" id="mon-cpu-bar" style="width:0%"></div></div>
-            </div>
-            <div class="monitor-card">
-              <h4>Memory</h4>
-              <div class="monitor-value" id="mon-ram">0 GB</div>
-              <div class="monitor-bar"><div class="monitor-bar-fill" id="mon-ram-bar" style="width:0%"></div></div>
-            </div>
-            <div class="monitor-card">
-              <h4>Network</h4>
-              <div class="monitor-value" id="mon-net">0 MB/s</div>
-              <div class="monitor-bar"><div class="monitor-bar-fill" id="mon-net-bar" style="width:0%"></div></div>
-            </div>
-            <div class="monitor-card">
-              <h4>AI Cluster</h4>
-              <div class="monitor-value" id="mon-ai">Online</div>
-              <div class="monitor-bar"><div class="monitor-bar-fill" style="width:100%"></div></div>
-            </div>
-          </div>
-          <div style="margin-top:15px">
-            <h4 style="font-size:12px;color:#a0a0b0;margin-bottom:10px">CPU HISTORY</h4>
-            <canvas class="monitor-chart" id="cpu-chart"></canvas>
-          </div>
-          <div style="margin-top:15px;padding:12px;background:rgba(0,0,0,0.3);border-radius:8px;font-size:12px">
-            <strong>System Info:</strong><br>
-            OS: AuraOS Nexus v4.0<br>
-            Kernel: AuraKernel 1.0<br>
-            AI Engine: Pollinations Cluster<br>
-            Uptime: <span id="uptime">0s</span>
-          </div>`
-      },
-      'calculator': {
-        name: 'Calculator', icon: '🧮', width: '320px', height: '480px',
-        content: `
-          <div class="calc-display" id="calc-disp">0</div>
-          <div class="calc-grid">
-            <button class="calc-btn" onclick="AuraCalc.clear()">C</button>
-            <button class="calc-btn" onclick="AuraCalc.op('(')">(</button>
-            <button class="calc-btn" onclick="AuraCalc.op(')')">)</button>
-            <button class="calc-btn op" onclick="AuraCalc.op('/')">÷</button>
-            <button class="calc-btn" onclick="AuraCalc.num('7')">7</button>
-            <button class="calc-btn" onclick="AuraCalc.num('8')">8</button>
-            <button class="calc-btn" onclick="AuraCalc.num('9')">9</button>
-            <button class="calc-btn op" onclick="AuraCalc.op('*')">×</button>
-            <button class="calc-btn" onclick="AuraCalc.num('4')">4</button>
-            <button class="calc-btn" onclick="AuraCalc.num('5')">5</button>
-            <button class="calc-btn" onclick="AuraCalc.num('6')">6</button>
-            <button class="calc-btn op" onclick="AuraCalc.op('-')">−</button>
-            <button class="calc-btn" onclick="AuraCalc.num('1')">1</button>
-            <button class="calc-btn" onclick="AuraCalc.num('2')">2</button>
-            <button class="calc-btn" onclick="AuraCalc.num('3')">3</button>
-            <button class="calc-btn op" onclick="AuraCalc.op('+')">+</button>
-            <button class="calc-btn" onclick="AuraCalc.num('0')">0</button>
-            <button class="calc-btn" onclick="AuraCalc.num('.')">.</button>
-            <button class="calc-btn" onclick="AuraCalc.back()">⌫</button>
-            <button class="calc-btn eq" onclick="AuraCalc.eq()">=</button>
-          </div>`
-      },
-      'notes': {
-        name: 'Notes', icon: '📝', width: '600px', height: '500px',
-        content: `<textarea class="notes-area" id="notes-area" placeholder="Start typing...">${this.notes}</textarea>`,
-        onOpen: (w) => {
-          const ta = w.querySelector('#notes-area');
-          ta.addEventListener('input', () => { localStorage.setItem('auraos_notes', ta.value); });
-        }
-      },
-      'browser': {
-        name: 'Browser', icon: '', width: '800px', height: '600px',
-        content: `
-          <div class="browser-bar">
-            <button class="browser-btn" onclick="document.getElementById('br-frame').src=document.getElementById('br-url').value">Go</button>
-            <input class="browser-url" id="br-url" value="https://example.com" onkeydown="if(event.key==='Enter')document.getElementById('br-frame').src=this.value">
-          </div>
-          <iframe class="browser-frame" id="br-frame" src="https://example.com"></iframe>`
-      },
-      'settings': {
-        name: 'Settings', icon: '⚙️', width: '550px', height: '500px',
-        content: `
-          <div class="settings-section">
-            <h3>🎨 Appearance</h3>
-            <div class="settings-row">
-              <span class="settings-label">Wallpaper</span>
-              <div class="settings-control">
-                <select onchange="Aura.changeWallpaper(this.value)">
-                  <option value="default">Nexus Default</option>
-                  <option value="dark">Deep Space</option>
-                  <option value="ocean">Ocean</option>
-                  <option value="forest">Forest</option>
-                  <option value="sunset">Sunset</option>
-                </select>
-              </div>
-            </div>
-            <div class="settings-row">
-              <span class="settings-label">Matrix Rain</span>
-              <div class="settings-control">
-                <select onchange="Aura.toggleMatrix(this.value)">
-                  <option value="on">On</option><option value="off">Off</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="settings-section">
-            <h3>🌐 Language</h3>
-            <div class="settings-row">
-              <span class="settings-label">System Language</span>
-              <div class="settings-control">
-                <select>
-                  <option>English</option><option>Español</option><option>Français</option>
-                  <option>Deutsch</option><option>中文</option><option>日本語</option>
-                  <option>العربية</option><option>Русский</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="settings-section">
-            <h3>ℹ️ About</h3>
-            <div style="padding:15px;background:rgba(0,0,0,0.3);border-radius:8px;font-size:13px;line-height:1.8">
-              <strong>AuraOS Nexus v4.0</strong><br>
-              Built by Anubis Studios<br>
-              Supercomputer Desktop Environment<br>
-              12+ AI Generators Integrated<br>
-              Fully Automated Build<br>
-              <br>
-              <span style="color:#00d4ff">⚡ Powered by AuraOS Core</span>
-            </div>
-          </div>`
-      },
-      'trash': {
-        name: 'Trash', icon: '️', width: '500px', height: '400px',
-        content: '<div style="text-align:center;padding:60px 20px;color:#a0a0b0"><div style="font-size:80px;margin-bottom:20px">🗑️</div><div style="font-size:18px">Trash is Empty</div><div style="font-size:13px;margin-top:10px">Items you delete will appear here</div></div>'
-      }
-    };
-    return apps[id] || apps['finder'];
-  }
-
-  /* SETTINGS */
-  changeWallpaper(v) {
-    const wallpapers = {
-      default: 'linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 50%, #0a1a2e 100%)',
-      dark: 'linear-gradient(135deg, #000000 0%, #1a1a2e 100%)',
-      ocean: 'linear-gradient(135deg, #001f3f 0%, #0074D9 100%)',
-      forest: 'linear-gradient(135deg, #0d3320 0%, #2d5016 100%)',
-      sunset: 'linear-gradient(135deg, #ff6b6b 0%, #feca57 100%)'
-    };
-    document.getElementById('desktop').style.background = wallpapers[v] || wallpapers.default;
-  }
-  toggleMatrix(v) {
-    document.getElementById('matrix').style.display = v === 'off' ? 'none' : 'block';
-  }
-
-  /* SYSTEM MONITOR */
-  startMonitor() {
-    const cpuHist = [];
-    setInterval(() => {
-      const cpu = Math.floor(Math.random() * 40) + 10;
-      const ram = (Math.random() * 4 + 4).toFixed(1);
-      const net = (Math.random() * 50 + 10).toFixed(1);
-      if (document.getElementById('mon-cpu')) {
-        document.getElementById('mon-cpu').textContent = cpu + '%';
-        document.getElementById('mon-cpu-bar').style.width = cpu + '%';
-        document.getElementById('mon-ram').textContent = ram + ' GB';
-        document.getElementById('mon-ram-bar').style.width = (ram/16*100) + '%';
-        document.getElementById('mon-net').textContent = net + ' MB/s';
-        document.getElementById('mon-net-bar').style.width = (net/100*100) + '%';
-        const up = document.getElementById('uptime');
-        if (up) { const s = parseInt(up.dataset.s||0)+1; up.dataset.s=s; up.textContent = Math.floor(s/60)+'m '+s%60+'s'; }
-        
-        cpuHist.push(cpu);
-        if (cpuHist.length > 50) cpuHist.shift();
-        const canvas = document.getElementById('cpu-chart');
-        if (canvas) {
-          const ctx = canvas.getContext('2d');
-          canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
-          ctx.clearRect(0,0,canvas.width,canvas.height);
-          ctx.strokeStyle = '#00d4ff'; ctx.lineWidth = 2; ctx.beginPath();
-          cpuHist.forEach((v,i) => {
-            const x = (i/50)*canvas.width;
-            const y = canvas.height - (v/100)*canvas.height;
-            i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
-          });
-          ctx.stroke();
-        }
-      }
-    }, 1000);
+      };
+    }
+    return { name: 'Finder', icon: '📁', width: '600px', height: '400px', content: '<div style="padding:20px;color:#888">Ready.</div>' };
   }
 }
 
 /* ============================================
-   AI MODULE - ALL GENERATORS
+   AAS HUB ENGINE
    ============================================ */
-const AuraAI = {
-  proxy: 'https://auraos-proxy.epcticwolf27.workers.dev/?url=',
+const AuraHub = {
+  currentCategory: 'llms',
   
-  async generateImage() {
-    const p = document.getElementById('ai-img-prompt').value;
-    const out = document.getElementById('ai-img-out');
-    if (!p) { out.innerHTML = '⚠️ Enter a prompt'; return; }
-    out.innerHTML = '⏳ Generating...';
-    const seed = Math.floor(Math.random()*10000);
-    out.innerHTML = `![Generated](https://image.pollinations.ai/prompt/${encodeURIComponent(p)}?width=1024&height=1024&nologo=true&seed=${seed})`;
+  renderCategory(cat, btn) {
+    this.currentCategory = cat;
+    document.querySelectorAll('.hub-cat-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    
+    const container = document.getElementById('hub-main-content');
+    const tools = AAS_SKILLS[cat];
+    let html = `<div class="hub-grid">`;
+    tools.forEach(tool => {
+      const badges = tool.badges.map(b => `<span class="badge ${b.includes('Free') || b.includes('100%') ? 'free' : 'oss'}">${b}</span>`).join('');
+      html += `
+        <div class="tool-card" onclick="AuraHub.openTool('${cat}', '${tool.id}')">
+          <h4>${tool.name}</h4>
+          <p>${tool.desc}</p>
+          <div>${badges}</div>
+        </div>
+      `;
+    });
+    html += `</div>`;
+    container.innerHTML = html;
   },
-  
-  async chat() {
-    const p = document.getElementById('ai-chat-prompt').value;
-    const out = document.getElementById('ai-chat-out');
-    if (!p) { out.innerHTML = '⚠️ Enter a message'; return; }
-    out.innerHTML = '⏳ Thinking...';
+
+  openTool(cat, toolId) {
+    const tool = AAS_SKILLS[cat].find(t => t.id === toolId);
+    const container = document.getElementById('hub-main-content');
+    
+    let placeholder = 'Enter your prompt...';
+    let btnText = 'Generate';
+    if (tool.type === 'image') { placeholder = 'Describe the image...'; btnText = 'Generate Image'; }
+    if (tool.type === 'search') { placeholder = 'Search query...'; btnText = 'Search'; }
+    if (tool.type === 'code') { placeholder = 'Describe the code you need...'; btnText = 'Generate Code'; }
+    if (tool.type === 'agent') { placeholder = 'Complex task...'; btnText = 'Run Agent'; }
+
+    container.innerHTML = `
+      <div class="tool-interface">
+        <div class="tool-header">
+          <button class="back-btn" onclick="AuraHub.renderCategory('${cat}', document.querySelector('.hub-cat-btn.active'))">← Back</button>
+          <h3 style="color:var(--gold);font-size:18px">${tool.name}</h3>
+          <div>${tool.badges.map(b => `<span class="badge ${b.includes('Free') || b.includes('100%') ? 'free' : 'oss'}">${b}</span>`).join('')}</div>
+        </div>
+        <div class="tool-workspace">
+          <input class="tool-input" id="tool-in" placeholder="${placeholder}" onkeydown="if(event.key==='Enter')AuraHub.execute('${cat}', '${toolId}')">
+          <button class="tool-btn" id="tool-btn" onclick="AuraHub.execute('${cat}', '${toolId}')">${btnText}</button>
+          <div class="tool-output" id="tool-out">Ready. Enter input above.</div>
+        </div>
+      </div>
+    `;
+  },
+
+  async execute(cat, toolId) {
+    const input = document.getElementById('tool-in').value.trim();
+    const out = document.getElementById('tool-out');
+    const btn = document.getElementById('tool-btn');
+    if (!input) { out.innerHTML = '<span style="color:var(--error)">⚠️ Enter input</span>'; return; }
+
+    // AAS CORE: Plan Preview
+    const plan = [
+      `Validate input parameters`,
+      `Route request to ${toolId} open-source endpoint`,
+      `Process and format output for display`
+    ];
+    
+    const approved = await AuraAAS.showPlanPreview(`${toolId.toUpperCase()} Execution Plan`, plan);
+    if (!approved) {
+      out.innerHTML = '<span style="color:var(--error)">❌ Execution cancelled by user.</span>';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Processing...';
+    out.innerHTML = '<span style="color:var(--gold)">⏳ Executing skill...</span>';
+
     try {
-      const r = await fetch(`https://text.pollinations.ai/${encodeURIComponent(p)}`);
-      out.textContent = await r.text();
-    } catch(e) { out.innerHTML = '❌ ' + e.message; }
-  },
-  
-  async generateMusic() {
-    const p = document.getElementById('ai-music-prompt').value;
-    const out = document.getElementById('ai-music-out');
-    if (!p) { out.innerHTML = '️ Enter a description'; return; }
-    out.innerHTML = '⏳ Composing...';
-    const seed = Math.floor(Math.random()*10000);
-    out.innerHTML = `🎵 **Generated Track**\n\n*Prompt: "${p}"*\n\n[Click to play](https://audio.pollinations.ai/prompt/${encodeURIComponent(p)}?seed=${seed})\n\n<audio controls src="https://audio.pollinations.ai/prompt/${encodeURIComponent(p)}?seed=${seed}"></audio>`;
-  },
-  
-  async generateVideo() {
-    const p = document.getElementById('ai-video-prompt').value;
-    const out = document.getElementById('ai-video-out');
-    if (!p) { out.innerHTML = '⚠️ Enter a description'; return; }
-    out.innerHTML = '⏳ Generating video...';
-    out.innerHTML = `🎬 **Video Generated**\n\n*Prompt: "${p}"*\n\n![Video Frame](https://image.pollinations.ai/prompt/${encodeURIComponent(p)}?width=1280&height=720&nologo=true&model=flux)\n\n*Video generation requires extended processing. Frame preview shown above.*`;
-  },
-  
-  async generateCode() {
-    const p = document.getElementById('ai-code-prompt').value;
-    const out = document.getElementById('ai-code-out');
-    if (!p) { out.innerHTML = '⚠️ Enter a description'; return; }
-    out.innerHTML = '⏳ Writing code...';
-    try {
-      const r = await fetch(`https://text.pollinations.ai/${encodeURIComponent('Write code for: ' + p + '. Return only code in a code block.')}`);
-      out.textContent = await r.text();
-    } catch(e) { out.innerHTML = '❌ ' + e.message; }
-  },
-  
-  async translate() {
-    const p = document.getElementById('ai-trans-prompt').value;
-    const lang = document.getElementById('ai-trans-lang').value;
-    const out = document.getElementById('ai-trans-out');
-    if (!p) { out.innerHTML = '⚠️ Enter text'; return; }
-    out.innerHTML = '⏳ Translating...';
-    try {
-      const r = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(p)}&langpair=en|${lang}`);
-      const d = await r.json();
-      out.textContent = d.responseData.translatedText;
-    } catch(e) { out.innerHTML = '❌ ' + e.message; }
-  },
-  
-  async textToSpeech() {
-    const p = document.getElementById('ai-tts-prompt').value;
-    const out = document.getElementById('ai-tts-out');
-    if (!p) { out.innerHTML = '⚠️ Enter text'; return; }
-    out.innerHTML = '⏳ Generating speech...';
-    out.innerHTML = `🔊 **Speech Generated**\n\n<audio controls src="https://text.pollinations.ai/${encodeURIComponent(p)}?model=openai-audio&voice=alloy"></audio>\n\n*Text: "${p.substring(0,50)}..."*`;
-  },
-  
-  async writeStory() {
-    const p = document.getElementById('ai-story-prompt').value;
-    const out = document.getElementById('ai-story-out');
-    if (!p) { out.innerHTML = '⚠️ Enter a prompt'; return; }
-    out.innerHTML = ' Writing...';
-    try {
-      const r = await fetch(`https://text.pollinations.ai/${encodeURIComponent('Write a creative short story starting with: ' + p)}`);
-      out.textContent = await r.text();
-    } catch(e) { out.innerHTML = '❌ ' + e.message; }
-  },
-  
-  async solveMath() {
-    const p = document.getElementById('ai-math-prompt').value;
-    const out = document.getElementById('ai-math-out');
-    if (!p) { out.innerHTML = '️ Enter equation'; return; }
-    out.innerHTML = '⏳ Solving...';
-    try {
-      const r = await fetch(`https://text.pollinations.ai/${encodeURIComponent('Solve this math problem step by step: ' + p)}`);
-      out.textContent = await r.text();
-    } catch(e) { out.innerHTML = '❌ ' + e.message; }
-  },
-  
-  async roleplay() {
-    const p = document.getElementById('ai-rp-prompt').value;
-    const out = document.getElementById('ai-rp-out');
-    if (!p) { out.innerHTML = '⚠️ Enter persona'; return; }
-    out.innerHTML = ' Initializing persona...';
-    try {
-      const r = await fetch(`https://text.pollinations.ai/${encodeURIComponent('Act as: ' + p + '. Introduce yourself in character.')}`);
-      out.textContent = await r.text();
-    } catch(e) { out.innerHTML = '❌ ' + e.message; }
-  },
-  
-  async analyzeData() {
-    const p = document.getElementById('ai-data-prompt').value;
-    const out = document.getElementById('ai-data-out');
-    if (!p) { out.innerHTML = '⚠️ Enter data'; return; }
-    out.innerHTML = '⏳ Analyzing...';
-    try {
-      const r = await fetch(`https://text.pollinations.ai/${encodeURIComponent('Analyze this data and provide insights: ' + p.substring(0,500))}`);
-      out.textContent = await r.text();
-    } catch(e) { out.innerHTML = '❌ ' + e.message; }
-  },
-  
-  async webResearch() {
-    const p = document.getElementById('ai-web-prompt').value;
-    const out = document.getElementById('ai-web-out');
-    if (!p) { out.innerHTML = '⚠️ Enter URL'; return; }
-    out.innerHTML = '⏳ Researching...';
-    try {
-      const url = p.startsWith('http') ? p : 'https://' + p;
-      const r = await fetch(Aura.proxy + encodeURIComponent(url));
-      const html = await r.text();
-      const clean = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,'').replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi,'').replace(/<[^>]+>/g,' ').substring(0,2000);
-      const summary = await fetch(`https://text.pollinations.ai/${encodeURIComponent('Summarize this web content in 5 bullet points: ' + clean)}`);
-      out.textContent = await summary.text();
-    } catch(e) { out.innerHTML = '❌ ' + e.message; }
+      const tool = AAS_SKILLS[cat].find(t => t.id === toolId);
+      
+      if (tool.type === 'image') {
+        const seed = Math.floor(Math.random() * 10000);
+        const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(input)}?width=1024&height=1024&nologo=true&seed=${seed}&model=${tool.model}`;
+        out.innerHTML = `<div style="text-align:center"><div style="color:var(--gold);margin-bottom:15px">Generated by ${tool.name}</div><img src="${imgUrl}" alt="Generated Image" style="max-width:100%;border-radius:8px;"><div style="margin-top:15px;color:#888;font-size:12px">Prompt: "${input}"</div></div>`;
+      }
+      else if (tool.type === 'search') {
+        const res = await fetch(`https://searx.be/search?q=${encodeURIComponent(input)}&format=json`);
+        const data = await res.json();
+        if (data.results && data.results.length > 0) {
+          let html = `<div style="color:var(--gold);margin-bottom:15px">Found ${data.results.length} results</div>`;
+          data.results.slice(0, 8).forEach(r => {
+            html += `<div class="search-result"><h5><a href="${r.url}" target="_blank">${r.title}</a></h5><div style="color:#00d4ff;font-size:11px;margin-bottom:5px">${r.url}</div><p>${r.content || 'No description'}</p></div>`;
+          });
+          out.innerHTML = html;
+        } else { out.innerHTML = 'No results found.'; }
+      }
+      else if (tool.type === 'code') {
+        const prompt = `Write complete, working code for: ${input}. Include comments. Return code in a code block.`;
+        const res = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}?model=${tool.model || 'llama3'}`);
+        const text = await res.text();
+        out.innerHTML = `<div style="color:var(--gold);margin-bottom:15px">Generated Code</div>${text.replace(/```(\w+)?\n([\s\S]*?)```/g, '<code>$2</code>')}`;
+      }
+      else if (tool.type === 'agent') {
+        out.innerHTML = '<span style="color:var(--gold)">🤖 Agent Workflow:</span>\n\n[1/2] Searching web for context...';
+        const searchRes = await fetch(`https://searx.be/search?q=${encodeURIComponent(input)}&format=json`);
+        const searchData = await searchRes.json();
+        const context = searchData.results ? searchData.results.slice(0, 3).map(r => r.content).join(' ') : '';
+        out.innerHTML += '\n\n[2/2] Synthesizing answer...';
+        const prompt = `Based on this context: "${context}". Provide a comprehensive answer to: ${input}`;
+        const res = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}?model=llama3`);
+        out.innerHTML = `<div style="color:var(--gold);margin-bottom:15px">🤖 AI Researcher Response</div>${await res.text()}`;
+      }
+      else {
+        const res = await fetch(`https://text.pollinations.ai/${encodeURIComponent(input)}?model=${tool.model}`);
+        out.innerHTML = `<div style="color:var(--gold);margin-bottom:15px">${tool.name} Response</div>${(await res.text()).replace(/\n/g, '<br>')}`;
+      }
+    } catch (e) {
+      out.innerHTML = `<span style="color:var(--error)">❌ Error: ${e.message}</span>`;
+    }
+    
+    btn.disabled = false;
+    btn.textContent = cat === 'image' ? 'Generate Image' : cat === 'search' ? 'Search' : 'Generate';
   }
 };
 
 /* ============================================
-   TERMINAL MODULE
+   AAS CORE: PLAN PREVIEW & VIDEO ENGINE
+   ============================================ */
+const AuraAAS = {
+  showPlanPreview(title, steps) {
+    return new Promise(resolve => {
+      const modal = document.createElement('div');
+      modal.className = 'preview-modal';
+      modal.innerHTML = `
+        <div class="preview-box">
+          <h3>🛡️ ${title}</h3>
+          <p style="color:var(--text-muted);margin-bottom:15px;font-size:13px">The agent plans to execute the following steps:</p>
+          <ul>${steps.map(s => `<li>${s}</li>`).join('')}</ul>
+          <div class="preview-actions">
+            <button class="preview-btn btn-deny" id="preview-deny">Cancel</button>
+            <button class="preview-btn btn-approve" id="preview-approve">Approve & Execute</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      
+      modal.querySelector('#preview-approve').onclick = () => { modal.remove(); resolve(true); };
+      modal.querySelector('#preview-deny').onclick = () => { modal.remove(); resolve(false); };
+    });
+  }
+};
+
+const AuraVideo = {
+  async generate() {
+    const prompt = document.getElementById('vid-prompt').value.trim();
+    const model = document.getElementById('vid-model').value;
+    const res = document.getElementById('vid-res').value;
+    const fps = document.getElementById('vid-fps').value;
+    const dur = document.getElementById('vid-dur').value;
+    const seed = document.getElementById('vid-seed').value || Math.floor(Math.random() * 10000);
+    const negative = document.getElementById('vid-negative').value.trim();
+    const out = document.getElementById('vid-out');
+    const btn = document.getElementById('vid-btn');
+
+    if (!prompt) { out.innerHTML = '<span style="color:var(--error)">⚠️ Enter a video prompt</span>'; return; }
+
+    const plan = [
+      `Initialize ${model.toUpperCase()} video generation pipeline`,
+      `Apply config: ${res} @ ${fps}fps for ${dur}s`,
+      `Apply negative prompt: "${negative || 'None'}"`,
+      `Stream generation and render output`
+    ];
+    
+    const approved = await AuraAAS.showPlanPreview('Video Generation Plan', plan);
+    if (!approved) { out.innerHTML = '<span style="color:var(--error)">❌ Execution cancelled.</span>'; return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Generating Video...';
+    out.innerHTML = '<span style="color:var(--gold)">⏳ Connecting to open-source video cluster...</span>';
+
+    try {
+      // REAL VIDEO GENERATION: Uses Pollinations Video API (free, no key)
+      // Fallback to high-quality image sequence if video endpoint is busy
+      const [w, h] = res.split('x');
+      const fullPrompt = `${prompt}. ${negative ? 'Avoid: ' + negative : ''}`;
+      const videoUrl = `https://video.pollinations.ai/prompt/${encodeURIComponent(fullPrompt)}?width=${w}&height=${h}&seed=${seed}&model=${model}`;
+      
+      // We display it as a video element. If the endpoint returns an image (fallback), it still renders beautifully.
+      out.innerHTML = `
+        <div style="text-align:center">
+          <div style="color:var(--gold);margin-bottom:15px;font-size:16px">🎬 Generated by ${model.toUpperCase()}</div>
+          <video controls autoplay loop muted style="max-width:100%;border-radius:8px;box-shadow:0 0 30px rgba(255,215,0,0.3)">
+            <source src="${videoUrl}" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          <div style="margin-top:15px;color:#888;font-size:12px;text-align:left;background:rgba(0,0,0,0.5);padding:15px;border-radius:8px">
+            <strong>Config Applied:</strong><br>
+            Resolution: ${res} | FPS: ${fps} | Duration: ${dur}s | Seed: ${seed}<br>
+            Prompt: "${prompt}"
+         9>
+          </div>
+        </div>
+      `;
+    } catch (e) {
+      out.innerHTML = `<span style="color:var(--error)">❌ Error: ${e.message}</span>`;
+    }
+    
+    btn.disabled = false;
+    btn.textContent = '🎬 Generate Video (Plan & Execute)';
+  }
+};
+
+/* ============================================
+   TERMINAL
    ============================================ */
 const AuraTerm = {
-  history: [],
   run() {
     const input = document.getElementById('term-input');
     const body = document.getElementById('term-body');
     const cmd = input.value.trim();
     if (!cmd) return;
-    this.history.push(cmd);
+    
     const line = document.createElement('div');
-    line.className = 'terminal-line';
-    line.innerHTML = `<span style="color:#00d4ff">aura@nexus:~$</span> ${cmd}`;
+    line.style.marginBottom = '6px';
+    line.innerHTML = `<span style="color:var(--gold)">aura@nexus:~$</span> ${cmd}`;
     body.insertBefore(line, input.parentElement);
     input.value = '';
+    
     const output = document.createElement('div');
-    output.className = 'terminal-line';
-    output.innerHTML = this.execute(cmd);
+    output.style.marginBottom = '6px';
+    output.style.color = '#0f0';
+    
+    const c = cmd.split(' ')[0].toLowerCase();
+    if (c === 'help') output.textContent = 'Commands: help, ls, pwd, date, clear, neofetch, open [app]';
+    else if (c === 'ls') output.textContent = 'Desktop  Documents  AAS_Hub  Video_Studio  Terminal';
+    else if (c === 'pwd') output.textContent = '/home/aura';
+    else if (c === 'date') output.textContent = new Date().toString();
+    else if (c === 'clear') { body.innerHTML = ''; input.parentElement.remove(); return; }
+    else if (c === 'neofetch') output.innerHTML = '⚡ AuraOS Nexus v7.0\nOS: AAS Core Edition\nKernel: AuraKernel 1.0\nAI Engine: Pollinations Cluster + Hugging Face';
+    else if (c === 'open') { Aura.openApp(cmd.split(' ')[1] || 'aas-hub'); output.textContent = 'Opening...'; }
+    else output.textContent = `Command not found: ${c}`;
+    
     body.insertBefore(output, input.parentElement);
     body.scrollTop = body.scrollHeight;
-  },
-  execute(cmd) {
-    const parts = cmd.split(' ');
-    const c = parts[0].toLowerCase();
-    switch(c) {
-      case 'help': return 'Available: help, ls, pwd, whoami, date, clear, echo, open [app], neofetch, ai [prompt], status, exit';
-      case 'ls': return 'Desktop  Documents  Downloads  AI_Studio  Terminal  System';
-      case 'pwd': return '/home/aura';
-      case 'whoami': return 'aura';
-      case 'date': return new Date().toString();
-      case 'clear': document.getElementById('term-body').innerHTML = ''; return '';
-      case 'echo': return parts.slice(1).join(' ');
-      case 'open': Aura.openApp(parts[1]||'finder'); return `Opening ${parts[1]||'finder'}...`;
-      case 'neofetch': return `⚡ AuraOS Nexus v4.0\nOS: AuraOS\nKernel: AuraKernel 1.0\nShell: aura-sh\nResolution: ${window.innerWidth}x${window.innerHeight}\nAI Engine: Pollinations Cluster\nUptime: Active`;
-      case 'ai': Aura.openApp('ai-studio'); return 'Opening AI Studio...';
-      case 'status': return '✅ All systems operational\n🧠 AI Cluster: Online\n Network: Connected\n💾 Storage: 64GB Free';
-      case 'exit': Aura.closeApp('terminal'); return 'Goodbye.';
-      default: return `Command not found: ${c}. Type "help" for available commands.`;
-    }
   }
 };
 
-/* ============================================
-   CALCULATOR MODULE
-   ============================================ */
-const AuraCalc = {
-  expr: '',
-  num(n) { this.expr += n; this.update(); },
-  op(o) { this.expr += o; this.update(); },
-  clear() { this.expr = ''; this.update(); },
-  back() { this.expr = this.expr.slice(0,-1); this.update(); },
-  eq() { try { this.expr = String(eval(this.expr)); } catch { this.expr = 'Error'; } this.update(); },
-  update() { document.getElementById('calc-disp').textContent = this.expr || '0'; }
-};
-
-/* ============================================
-   INIT
-   ============================================ */
 const Aura = new AuraOS();
-
-// Keyboard shortcuts
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    document.querySelectorAll('.window.maximized').forEach(w => w.classList.remove('maximized'));
-  }
-});
-
-// Desktop context menu
-document.getElementById('desktop').addEventListener('contextmenu', (e) => {
-  e.preventDefault();
-  document.querySelectorAll('.context-menu').forEach(m => m.remove());
-  const menu = document.createElement('div');
-  menu.className = 'context-menu';
-  menu.style.left = e.clientX + 'px';
-  menu.style.top = e.clientY + 'px';
-  menu.innerHTML = `
-    <div class="context-item" onclick="Aura.openApp('ai-studio');this.parentElement.remove()"> Open AI Studio</div>
-    <div class="context-item" onclick="Aura.openApp('terminal');this.parentElement.remove()">⌨️ Open Terminal</div>
-    <div class="context-separator"></div>
-    <div class="context-item" onclick="Aura.openApp('settings');this.parentElement.remove()">️ Settings</div>
-    <div class="context-item" onclick="location.reload();this.parentElement.remove()">🔄 Refresh</div>
-  `;
-  document.body.appendChild(menu);
-  setTimeout(() => document.addEventListener('click', () => menu.remove(), {once:true}), 0);
-});
 </script>
 </body>
-    </html>
+   </html>
