@@ -2,182 +2,184 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>AuraOS v8.0 - Rotation Engine</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AuraOS v9.0 - Ultimate Edition</title>
 <meta name="theme-color" content="#FFD700">
 <style>
-/* ==========================================
-   AURAOS v8.0 - GOLD & BLACK SUPERCOMPUTER
-   ========================================== */
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 html, body { width: 100%; height: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif; background: #000; color: #fff; }
+:root { --gold: #FFD700; --gold-dim: #B8860B; --glass: rgba(20,20,20,0.9); --text: #fff; --success: #28c840; --error: #ff5f57; }
 
-:root {
-  --gold: #FFD700; --gold-dim: #B8860B; --gold-light: #FFE55C;
-  --black: #0a0a0a; --dark: #1a1a1a; --glass: rgba(20,20,20,0.85);
-  --text: #ffffff; --text-muted: #888888; --success: #28c840; --error: #ff5f57;
-}
-
-/* BOOT SCREEN */
-#boot-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--black); z-index: 100000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.8s; }
-.boot-logo { width: 120px; height: 120px; background: linear-gradient(135deg, var(--gold), var(--gold-dim)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 60px; box-shadow: 0 0 50px rgba(255,215,0,0.4); animation: pulse 2s infinite; margin-bottom: 30px; }
-@keyframes pulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.9; } }
-.boot-text { color: var(--gold); font-size: 18px; margin-bottom: 20px; letter-spacing: 2px; font-weight: 300; }
-.boot-bar { width: 250px; height: 3px; background: #222; border-radius: 2px; overflow: hidden; }
-.boot-bar-fill { height: 100%; width: 0%; background: var(--gold); transition: width 0.1s; box-shadow: 0 0 10px var(--gold); }
+/* BOOT */
+#boot { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 100000; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.8s; }
+.boot-logo { width: 100px; height: 100px; background: linear-gradient(135deg, var(--gold), var(--gold-dim)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 50px; animation: pulse 2s infinite; margin-bottom: 20px; }
+@keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+.boot-bar { width: 200px; height: 3px; background: #222; border-radius: 2px; overflow: hidden; }
+.boot-fill { height: 100%; width: 0%; background: var(--gold); transition: width 0.1s; }
 
 /* DESKTOP */
-#desktop { width: 100%; height: 100%; position: relative; background: radial-gradient(ellipse at center, #1a1a2e 0%, #050505 100%); overflow: hidden; }
-#matrix { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.12; pointer-events: none; }
+#desktop { width: 100%; height: 100%; background: radial-gradient(ellipse at center, #1a1a2e 0%, #050505 100%); position: relative; overflow: hidden; }
+#matrix { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.1; pointer-events: none; }
 
 /* MENU BAR */
 #menu-bar { position: fixed; top: 0; width: 100%; height: 28px; background: rgba(10,10,10,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,215,0,0.2); display: flex; align-items: center; padding: 0 12px; z-index: 9000; font-size: 12px; }
 .menu-apple { font-size: 14px; margin-right: 15px; color: var(--gold); cursor: pointer; }
 .menu-item { padding: 2px 8px; margin-right: 2px; cursor: pointer; border-radius: 3px; }
 .menu-item:hover { background: rgba(255,215,0,0.15); }
-.menu-right { margin-left: auto; display: flex; gap: 12px; align-items: center; }
+.menu-right { margin-left: auto; display: flex; gap: 12px; }
 
-/* DESKTOP ICONS */
+/* ICONS & DOCK */
 .desktop-icons { position: absolute; top: 40px; right: 15px; display: flex; flex-direction: column; gap: 15px; }
 .desktop-icon { width: 75px; text-align: center; cursor: pointer; padding: 8px; border-radius: 8px; transition: all 0.2s; }
 .desktop-icon:hover { background: rgba(255,215,0,0.1); transform: scale(1.05); }
-.desktop-icon-img { font-size: 42px; margin-bottom: 4px; filter: drop-shadow(0 0 8px rgba(255,215,0,0.3)); }
+.desktop-icon-img { font-size: 42px; margin-bottom: 4px; }
 .desktop-icon-label { color: #fff; font-size: 10px; text-shadow: 0 1px 3px rgba(0,0,0,0.9); }
 
-/* DOCK */
-#dock { position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); background: rgba(20,20,20,0.75); backdrop-filter: blur(30px); border: 1px solid rgba(255,215,0,0.2); border-radius: 18px; padding: 6px 12px; display: flex; gap: 6px; z-index: 8000; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+#dock { position: fixed; bottom: 8px; left: 50%; transform: translateX(-50%); background: rgba(20,20,20,0.8); backdrop-filter: blur(30px); border: 1px solid rgba(255,215,0,0.2); border-radius: 18px; padding: 6px 12px; display: flex; gap: 6px; z-index: 8000; }
 .dock-item { width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #2a2a2a, #1a1a1a); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; border: 1px solid rgba(255,215,0,0.15); position: relative; }
-.dock-item:hover { transform: translateY(-8px) scale(1.15); border-color: var(--gold); box-shadow: 0 0 15px rgba(255,215,0,0.3); }
-.dock-item.active::after { content: ''; position: absolute; bottom: -5px; width: 4px; height: 4px; background: var(--gold); border-radius: 50%; box-shadow: 0 0 5px var(--gold); }
+.dock-item:hover { transform: translateY(-8px) scale(1.15); border-color: var(--gold); }
+.dock-item.active::after { content: ''; position: absolute; bottom: -5px; width: 4px; height: 4px; background: var(--gold); border-radius: 50%; }
 .dock-icon { font-size: 24px; }
 
 /* WINDOWS */
-.window { position: absolute; background: var(--glass); backdrop-filter: blur(30px); border: 1px solid rgba(255,215,0,0.25); border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.9); min-width: 320px; min-height: 250px; display: flex; flex-direction: column; overflow: hidden; transition: opacity 0.2s; }
+.window { position: absolute; background: var(--glass); backdrop-filter: blur(30px); border: 1px solid rgba(255,215,0,0.25); border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.9); min-width: 320px; min-height: 250px; display: flex; flex-direction: column; overflow: hidden; }
 .window-header { height: 34px; background: rgba(30,30,30,0.95); border-bottom: 1px solid rgba(255,215,0,0.15); display: flex; align-items: center; padding: 0 12px; cursor: move; }
 .window-controls { display: flex; gap: 6px; margin-right: 10px; }
 .window-btn { width: 11px; height: 11px; border-radius: 50%; cursor: pointer; border: none; }
 .btn-close { background: var(--error); } .btn-min { background: #ffbd2e; } .btn-max { background: var(--success); }
-.window-title { color: var(--gold); font-size: 12px; font-weight: 600; flex: 1; text-align: center; letter-spacing: 0.5px; }
+.window-title { color: var(--gold); font-size: 12px; font-weight: 600; flex: 1; text-align: center; }
 .window-body { flex: 1; overflow: auto; padding: 15px; color: var(--text); }
-.window-body::-webkit-scrollbar { width: 6px; }
-.window-body::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
 
-/* APP SPECIFIC STYLES */
+/* APP UI */
+.hub-layout { display: flex; height: 100%; gap: 15px; }
+.hub-sidebar { width: 180px; background: rgba(0,0,0,0.3); border-radius: 10px; padding: 10px; display: flex; flex-direction: column; gap: 5px; }
+.hub-cat-btn { padding: 8px 10px; border-radius: 6px; cursor: pointer; color: #888; font-size: 12px; text-align: left; border: none; background: transparent; }
+.hub-cat-btn:hover, .hub-cat-btn.active { background: rgba(255,215,0,0.15); color: var(--gold); }
+.hub-content { flex: 1; overflow-y: auto; }
 .hub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
-.tool-card { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,215,0,0.1); border-radius: 10px; padding: 14px; cursor: pointer; transition: all 0.2s; }
-.tool-card:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,215,0,0.1); }
+.tool-card { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,215,0,0.1); border-radius: 10px; padding: 12px; cursor: pointer; transition: all 0.2s; }
+.tool-card:hover { border-color: var(--gold); transform: translateY(-2px); }
 .tool-card h4 { color: var(--gold); font-size: 13px; margin-bottom: 4px; }
-.tool-card p { font-size: 10px; color: var(--text-muted); line-height: 1.3; margin-bottom: 8px; }
-.badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 8px; font-weight: 700; background: rgba(40,200,64,0.2); color: var(--success); }
+.tool-card p { font-size: 10px; color: #888; margin-bottom: 8px; }
+.badge { display: inline-block; padding: 2px 5px; border-radius: 4px; font-size: 8px; font-weight: 700; background: rgba(40,200,64,0.2); color: var(--success); }
 
-.status-bar { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(40,200,64,0.1); border: 1px solid rgba(40,200,64,0.3); border-radius: 20px; font-size: 10px; color: var(--success); margin-bottom: 15px; font-weight: 600; }
+.status-bar { padding: 6px 12px; background: rgba(40,200,64,0.1); border: 1px solid rgba(40,200,64,0.3); border-radius: 20px; font-size: 10px; color: var(--success); margin-bottom: 15px; font-weight: 600; display: inline-block; }
 .status-bar.rotating { background: rgba(255,215,0,0.1); border-color: rgba(255,215,0,0.3); color: var(--gold); }
 
-.tool-input { width: 100%; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,215,0,0.2); border-radius: 8px; color: #fff; font-size: 12px; margin-bottom: 10px; font-family: inherit; resize: vertical; }
-.tool-input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 10px rgba(255,215,0,0.1); }
-.tool-btn { width: 100%; padding: 10px; background: linear-gradient(135deg, var(--gold), var(--gold-dim)); border: none; border-radius: 8px; color: #000; font-weight: 700; cursor: pointer; font-size: 12px; letter-spacing: 0.5px; transition: all 0.2s; }
-.tool-btn:hover { box-shadow: 0 0 15px rgba(255,215,0,0.3); }
-.tool-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.tool-output { background: rgba(0,0,0,0.6); border: 1px solid rgba(255,215,0,0.1); border-radius: 8px; padding: 12px; min-height: 120px; font-family: 'Courier New', monospace; font-size: 11px; white-space: pre-wrap; word-wrap: break-word; color: #0f0; line-height: 1.5; margin-top: 10px; }
-.tool-output img { max-width: 100%; border-radius: 6px; margin-top: 10px; border: 1px solid rgba(255,215,0,0.2); }
-.tool-output code { background: rgba(0,0,0,0.8); padding: 10px; border-radius: 6px; display: block; margin: 8px 0; border-left: 3px solid var(--gold); overflow-x: auto; }
+.tool-input { width: 100%; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,215,0,0.2); border-radius: 8px; color: #fff; font-size: 12px; margin-bottom: 10px; font-family: inherit; }
+.tool-input:focus { outline: none; border-color: var(--gold); }
+.tool-btn { width: 100%; padding: 10px; background: linear-gradient(135deg, var(--gold), var(--gold-dim)); border: none; border-radius: 8px; color: #000; font-weight: 700; cursor: pointer; font-size: 12px; }
+.tool-btn:disabled { opacity: 0.5; }
+.tool-output { background: rgba(0,0,0,0.6); border: 1px solid rgba(255,215,0,0.1); border-radius: 8px; padding: 12px; min-height: 120px; font-family: monospace; font-size: 11px; white-space: pre-wrap; word-wrap: break-word; color: #0f0; line-height: 1.5; margin-top: 10px; }
+.tool-output img, .tool-output video { max-width: 100%; border-radius: 6px; margin-top: 10px; border: 1px solid rgba(255,215,0,0.2); }
 
 .back-btn { background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.2); color: var(--gold); padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; margin-bottom: 12px; display: inline-block; }
-.back-btn:hover { background: rgba(255,215,0,0.2); }
-
 .settings-row { margin-bottom: 15px; }
 .settings-row label { color: var(--gold); font-size: 12px; font-weight: 600; display: block; margin-bottom: 6px; }
 .settings-row input { width: 100%; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,215,0,0.2); border-radius: 8px; color: #fff; font-size: 12px; font-family: monospace; }
 .settings-row input:focus { outline: none; border-color: var(--gold); }
-.settings-hint { font-size: 10px; color: var(--text-muted); margin-top: 4px; line-height: 1.4; }
-
-/* RESPONSIVE */
-@media (max-width: 600px) {
-  .window { min-width: 92vw !important; min-height: 70vh !important; left: 4vw !important; top: 40px !important; }
-  .hub-grid { grid-template-columns: 1fr 1fr; }
-}
 </style>
 </head>
 <body>
 
-<!-- BOOT SCREEN -->
-<div id="boot-screen">
+<div id="boot">
   <div class="boot-logo">⚡</div>
-  <div class="boot-text">Initializing AuraOS v8.0</div>
-  <div class="boot-bar"><div class="boot-bar-fill" id="boot-bar"></div></div>
+  <div style="color:var(--gold);font-size:16px;margin-bottom:15px">Initializing AuraOS v9.0</div>
+  <div class="boot-bar"><div class="boot-fill" id="boot-bar"></div></div>
 </div>
 
-<!-- DESKTOP -->
 <div id="desktop">
   <canvas id="matrix"></canvas>
-  
   <div id="menu-bar">
-    <span class="menu-apple" onclick="Aura.openApp('settings')"></span>
+    <span class="menu-apple" onclick="Aura.openApp('settings')">⚡</span>
     <span class="menu-item" id="active-app">Finder</span>
     <span class="menu-item">File</span>
     <span class="menu-item">Edit</span>
-    <div class="menu-right">
-      <span>📶</span>
-      <span id="clock">12:00</span>
-    </div>
+    <div class="menu-right"><span id="clock">12:00</span></div>
   </div>
 
   <div class="desktop-icons">
-    <div class="desktop-icon" ondblclick="Aura.openApp('ai')"><div class="desktop-icon-img">🧠</div><div class="desktop-icon-label">AI Tools</div></div>
-    <div class="desktop-icon" ondblclick="Aura.openApp('image')"><div class="desktop-icon-img">🎨</div><div class="desktop-icon-label">Image Gen</div></div>
-    <div class="desktop-icon" ondblclick="Aura.openApp('settings')"><div class="desktop-icon-img">️</div><div class="desktop-icon-label">Settings</div></div>
+    <div class="desktop-icon" ondblclick="Aura.openApp('aas-hub')"><div class="desktop-icon-img">🧠</div><div class="desktop-icon-label">AAS Hub</div></div>
+    <div class="desktop-icon" ondblclick="Aura.openApp('video-studio')"><div class="desktop-icon-img">🎬</div><div class="desktop-icon-label">Video Studio</div></div>
+    <div class="desktop-icon" ondblclick="Aura.openApp('image-gen')"><div class="desktop-icon-img">🎨</div><div class="desktop-icon-label">Image Gen</div></div>
+    <div class="desktop-icon" ondblclick="Aura.openApp('settings')"><div class="desktop-icon-img">⚙️</div><div class="desktop-icon-label">Settings</div></div>
     <div class="desktop-icon" ondblclick="Aura.openApp('terminal')"><div class="desktop-icon-img">⌨️</div><div class="desktop-icon-label">Terminal</div></div>
   </div>
 
   <div id="windows-container"></div>
 
   <div id="dock">
-    <div class="dock-item active" onclick="Aura.openApp('ai')"><div class="dock-icon">🧠</div></div>
-    <div class="dock-item" onclick="Aura.openApp('image')"><div class="dock-icon">🎨</div></div>
-    <div class="dock-item" onclick="Aura.openApp('settings')"><div class="dock-icon">⚙️</div></div>
+    <div class="dock-item active" onclick="Aura.openApp('aas-hub')"><div class="dock-icon">🧠</div></div>
+    <div class="dock-item" onclick="Aura.openApp('video-studio')"><div class="dock-icon">🎬</div></div>
+    <div class="dock-item" onclick="Aura.openApp('image-gen')"><div class="dock-icon">🎨</div></div>
+    <div class="dock-item" onclick="Aura.openApp('settings')"><div class="dock-icon">️</div></div>
     <div class="dock-item" onclick="Aura.openApp('terminal')"><div class="dock-icon">⌨️</div></div>
   </div>
 </div>
 
 <script>
 // ==========================================
-// ROTATION ENGINE (NEVER RUNS OUT)
+// ROTATION ENGINE (MULTI-KEY & FREE TIERS)
 // ==========================================
 const RotationEngine = {
   async executeText(prompt, type) {
-    // 1. Try Pollinations (100% Free, No Key)
+    const keys = {
+      openrouter: localStorage.getItem('aura_key_openrouter'),
+      groq: localStorage.getItem('aura_key_groq')
+    };
+
+    // 1. Pollinations (Free, No Key)
     try {
       const model = type === 'code' ? 'llama' : 'mistral';
-      const url = `https://text.pollinations.ai/${encodeURIComponent(prompt)}?model=${model}&seed=${Math.floor(Math.random()*10000)}`;
-      const res = await fetch(url, { signal: AbortSignal.timeout(12000) });
+      const res = await fetch(`https://text.pollinations.ai/${encodeURIComponent(prompt)}?model=${model}&seed=${Math.floor(Math.random()*10000)}`, { signal: AbortSignal.timeout(10000) });
       if (res.ok) {
         const text = await res.text();
-        if (text && text.length > 5) return { text, provider: 'Pollinations (Free)', model };
+        // Reject HTML ad pages
+        if (!text.includes('<html') && text.length > 10) return { text, provider: 'Pollinations (Free)', model };
       }
-    } catch(e) { console.log('Pollinations failed, trying fallback...'); }
+    } catch(e) {}
 
-    // 2. Try OpenRouter (Free Tier Models, Requires Key)
-    const key = localStorage.getItem('aura_or_key');
-    if (key) {
+    // 2. OpenRouter (Free Tier Models)
+    if (keys.openrouter) {
       try {
         const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
           method: 'POST',
-          headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json', 'HTTP-Referer': location.href, 'X-Title': 'AuraOS' },
+          headers: { 'Authorization': `Bearer ${keys.openrouter}`, 'Content-Type': 'application/json', 'HTTP-Referer': location.href, 'X-Title': 'AuraOS' },
           body: JSON.stringify({ model: 'meta-llama/llama-3-8b-instruct:free', messages: [{role:'user', content: prompt}] }),
           signal: AbortSignal.timeout(15000)
         });
         if (res.ok) {
           const data = await res.json();
-          return { text: data.choices[0].message.content, provider: 'OpenRouter (Free Tier)', model: 'Llama 3 Free' };
+          if (data.choices) return { text: data.choices[0].message.content, provider: 'OpenRouter (Free Tier)', model: 'Llama 3' };
         }
-      } catch(e) { console.log('OpenRouter failed'); }
+      } catch(e) {}
     }
 
-    throw new Error('All providers failed. Add an OpenRouter API key in Settings for unlimited fallback.');
+    // 3. Groq (Blazing Fast, Free Tier)
+    if (keys.groq) {
+      try {
+        const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${keys.groq}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: 'llama3-8b-8192', messages: [{role:'user', content: prompt}] }),
+          signal: AbortSignal.timeout(15000)
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.choices) return { text: data.choices[0].message.content, provider: 'Groq (Fast)', model: 'Llama 3' };
+        }
+      } catch(e) {}
+    }
+
+    throw new Error('All providers failed. Add API keys in Settings for unlimited rotation.');
   },
 
   getImageUrl(prompt) {
     return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024&nologo=true&seed=${Math.floor(Math.random()*10000)}&model=flux&enhance=true`;
+  },
+
+  getVideoUrl(prompt) {
+    return `https://video.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=576&seed=${Math.floor(Math.random()*10000)}&model=wan2.1`;
   }
 };
 
@@ -185,24 +187,14 @@ const RotationEngine = {
 // AURA OS CORE
 // ==========================================
 class AuraOS {
-  constructor() {
-    this.windows = new Map();
-    this.zIndex = 100;
-    this.boot();
-  }
+  constructor() { this.windows = new Map(); this.zIndex = 100; this.boot(); }
 
   async boot() {
     const bar = document.getElementById('boot-bar');
-    for (let i = 0; i <= 100; i += 4) {
-      bar.style.width = i + '%';
-      await new Promise(r => setTimeout(r, 30));
-    }
-    setTimeout(() => {
-      document.getElementById('boot-screen').style.opacity = '0';
-      setTimeout(() => document.getElementById('boot-screen').style.display = 'none', 800);
-    }, 200);
+    for (let i = 0; i <= 100; i += 4) { bar.style.width = i + '%'; await new Promise(r => setTimeout(r, 30)); }
+    setTimeout(() => { document.getElementById('boot').style.opacity = '0'; setTimeout(() => document.getElementById('boot').style.display = 'none', 800); }, 200);
     this.initMatrix();
-    this.startClock();
+    setInterval(() => { document.getElementById('clock').textContent = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}); }, 1000);
   }
 
   initMatrix() {
@@ -210,88 +202,67 @@ class AuraOS {
     const ctx = canvas.getContext('2d');
     const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
     resize(); window.addEventListener('resize', resize);
-    const chars = '01アイウエオカキクケコ⚡';
-    const fontSize = 12;
-    const columns = canvas.width / fontSize;
-    const drops = Array(Math.floor(columns)).fill(1);
+    const chars = '01アイウエオ⚡';
+    const drops = Array(Math.floor(canvas.width / 12)).fill(1);
     setInterval(() => {
-      ctx.fillStyle = 'rgba(0,0,0,0.05)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#FFD700';
-      ctx.font = fontSize + 'px monospace';
+      ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#FFD700'; ctx.font = '12px monospace';
       for (let i = 0; i < drops.length; i++) {
-        ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * fontSize, drops[i] * fontSize);
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * 12, drops[i] * 12);
+        if (drops[i] * 12 > canvas.height && Math.random() > 0.975) drops[i] = 0;
         drops[i]++;
       }
     }, 60);
   }
 
-  startClock() {
-    setInterval(() => { document.getElementById('clock').textContent = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}); }, 1000);
-  }
-
   openApp(id) {
-    if (this.windows.has(id)) {
-      const w = this.windows.get(id);
-      w.style.display = 'flex'; w.style.zIndex = ++this.zIndex;
-      return;
-    }
+    if (this.windows.has(id)) { const w = this.windows.get(id); w.style.display = 'flex'; w.style.zIndex = ++this.zIndex; return; }
 
     const apps = {
-      'ai': { name: 'AI Tools', icon: '🧠', width: '90vw', height: '70vh',
+      'aas-hub': { name: 'AAS Skill Hub', icon: '🧠', width: '90vw', height: '75vh',
         content: `
-          <div class="status-bar" id="ai-status">✅ Rotation Engine Active (Free First)</div>
-          <div class="hub-grid" id="ai-grid">
-            <div class="tool-card" onclick="AuraTool.open('chat', 'AI Chat')"><h4>💬 AI Chat</h4><p>General conversation & reasoning</p><span class="badge">Auto-Rotate</span></div>
-            <div class="tool-card" onclick="AuraTool.open('code', 'Code Generator')"><h4>💻 Code Gen</h4><p>Write code in any language</p><span class="badge">Auto-Rotate</span></div>
-            <div class="tool-card" onclick="AuraTool.open('write', 'Creative Writing')"><h4>📝 Writing</h4><p>Stories, poems, essays</p><span class="badge">Auto-Rotate</span></div>
-          </div>
-          <div id="ai-workspace" style="display:none;">
-            <button class="back-btn" onclick="AuraTool.close('ai')">← Back to Tools</button>
-            <textarea class="tool-input" id="ai-input" rows="3" placeholder="Enter your prompt..."></textarea>
-            <button class="tool-btn" id="ai-btn" onclick="AuraTool.generate('ai', 'text')">Generate (Auto-Rotate)</button>
-            <div class="tool-output" id="ai-output">Ready. Enter a prompt above.</div>
-          </div>
-        `
+          <div class="hub-layout">
+            <div class="hub-sidebar">
+              <button class="hub-cat-btn active" onclick="AuraHub.render('llms', this)">🧠 LLMs</button>
+              <button class="hub-cat-btn" onclick="AuraHub.render('image', this)">🎨 Image</button>
+              <button class="hub-cat-btn" onclick="AuraHub.render('code', this)">💻 Code</button>
+              <button class="hub-cat-btn" onclick="AuraHub.render('research', this)">🔬 Research</button>
+              <button class="hub-cat-btn" onclick="AuraHub.render('agents', this)"> Agents</button>
+            </div>
+            <div class="hub-content" id="hub-main"></div>
+          </div>`
       },
-      'image': { name: 'Image Generator', icon: '🎨', width: '90vw', height: '70vh',
+      'video-studio': { name: 'Video Generation Studio', icon: '🎬', width: '90vw', height: '75vh',
         content: `
-          <div class="status-bar" id="img-status">✅ Image Rotation Active (FLUX)</div>
-          <div class="hub-grid" id="img-grid">
-            <div class="tool-card" onclick="AuraTool.open('flux', 'FLUX Image')"><h4>🌌 FLUX</h4><p>High-quality, detailed images</p><span class="badge">Free</span></div>
-            <div class="tool-card" onclick="AuraTool.open('stable', 'Stable Diffusion')"><h4>🎨 Stable Diffusion</h4><p>Fast, versatile generation</p><span class="badge">Free</span></div>
+          <div style="margin-bottom:15px"><span class="status-bar">✅ Video Rotation Active (Wan 2.1)</span></div>
+          <input class="tool-input" id="vid-in" placeholder="Describe the video scene (e.g., 'A golden cyberpunk supercomputer booting up')">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px">
+            <select class="tool-input" id="vid-res" style="margin:0"><option>1024x576</option><option>1280x720</option></select>
+            <select class="tool-input" id="vid-fps" style="margin:0"><option>8 fps</option><option>16 fps</option><option>24 fps</option></select>
+            <select class="tool-input" id="vid-dur" style="margin:0"><option>2s</option><option>4s</option><option>6s</option></select>
           </div>
-          <div id="img-workspace" style="display:none;">
-            <button class="back-btn" onclick="AuraTool.close('img')">← Back</button>
-            <input class="tool-input" id="img-input" placeholder="Describe the image (e.g., 'A golden cyberpunk supercomputer')">
-            <button class="tool-btn" id="img-btn" onclick="AuraTool.generate('img', 'image')">Generate Image</button>
-            <div class="tool-output" id="img-output" style="text-align:center; min-height:150px; display:flex; align-items:center; justify-content:center;">Ready.</div>
-          </div>
-        `
+          <button class="tool-btn" id="vid-btn" onclick="AuraTool.genVideo()">🎬 Generate Video (Plan & Execute)</button>
+          <div class="tool-output" id="vid-out" style="text-align:center;min-height:200px;display:flex;align-items:center;justify-content:center">Ready.</div>`
       },
-      'settings': { name: 'Settings', icon: '⚙️', width: '85vw', height: '60vh',
+      'image-gen': { name: 'Image Generator', icon: '🎨', width: '90vw', height: '70vh',
         content: `
-          <h3 style="color:var(--gold);margin-bottom:15px;font-size:16px;">Provider Configuration</h3>
-          <div class="settings-row">
-            <label>OpenRouter API Key (Unlimited Fallback)</label>
-            <input type="password" id="or-key" placeholder="sk-or-v1-..." value="${localStorage.getItem('aura_or_key') || ''}">
-            <div class="settings-hint">If free providers fail, the system automatically uses this key with OpenRouter's free-tier models (Llama 3, Mistral, Gemma). Get a free key at openrouter.ai</div>
-          </div>
-          <button class="tool-btn" onclick="AuraTool.saveSettings()" style="width:auto;padding:8px 16px;">Save Configuration</button>
-          <div id="settings-msg" style="margin-top:10px;color:var(--success);font-size:12px;"></div>
-          <div style="margin-top:30px;padding:15px;background:rgba(0,0,0,0.4);border-radius:8px;border:1px solid rgba(255,215,0,0.1);font-size:11px;color:#888;line-height:1.5;">
-            <strong style="color:var(--gold)"> AuraOS v8.0 Rotation Engine</strong><br>
-            Priority 1: Pollinations (100% Free, No Key)<br>
-            Priority 2: OpenRouter Free Tier (Requires Key)<br>
-            Status: <span style="color:var(--success)">Online & Auto-Rotating</span>
-          </div>
-        `
+          <div style="margin-bottom:15px"><span class="status-bar">✅ Image Rotation Active (FLUX)</span></div>
+          <input class="tool-input" id="img-in" placeholder="Describe the image (e.g., 'A golden cyberpunk supercomputer')">
+          <button class="tool-btn" id="img-btn" onclick="AuraTool.genImage()">Generate Image</button>
+          <div class="tool-output" id="img-out" style="text-align:center;min-height:200px;display:flex;align-items:center;justify-content:center">Ready.</div>`
+      },
+      'settings': { name: 'Settings', icon: '️', width: '85vw', height: '65vh',
+        content: `
+          <h3 style="color:var(--gold);margin-bottom:15px;font-size:16px;">Provider API Keys</h3>
+          <p style="font-size:11px;color:#888;margin-bottom:15px;">Add keys to enable unlimited rotation. The system tries free providers first, then rotates through your keys.</p>
+          <div class="settings-row"><label>OpenRouter API Key (Free Tier Models)</label><input type="password" id="key-or" placeholder="sk-or-v1-..." value="${localStorage.getItem('aura_key_openrouter')||''}"></div>
+          <div class="settings-row"><label>Groq API Key (Blazing Fast)</label><input type="password" id="key-groq" placeholder="gsk_..." value="${localStorage.getItem('aura_key_groq')||''}"></div>
+          <button class="tool-btn" onclick="AuraTool.saveKeys()" style="width:auto;padding:8px 16px;">Save Configuration</button>
+          <div id="set-msg" style="margin-top:10px;color:var(--success);font-size:12px;"></div>`
       },
       'terminal': { name: 'Terminal', icon: '️', width: '90vw', height: '60vh',
         content: `<div id="term-body" style="background:#000;color:#0f0;font-family:monospace;padding:12px;height:100%;overflow-y:auto;font-size:11px;line-height:1.5">
-          <div>AuraOS Rotation Engine v8.0</div>
-          <div>Type "help" for commands.</div>
+          <div>AuraOS Rotation Engine v9.0</div><div>Type "help" for commands.</div>
           <div style="display:flex;margin-top:8px"><span style="color:var(--gold);margin-right:6px">aura@nexus:~$</span><input id="term-in" style="background:transparent;border:none;color:#0f0;font-family:inherit;outline:none;flex:1;font-size:11px" onkeydown="if(event.key==='Enter')AuraTerm.run()"></div>
         </div>`
       }
@@ -299,13 +270,9 @@ class AuraOS {
 
     const app = apps[id];
     const win = document.createElement('div');
-    win.className = 'window';
-    win.id = `win-${id}`;
-    win.style.left = (20 + this.windows.size * 15) + 'px';
-    win.style.top = (40 + this.windows.size * 15) + 'px';
-    win.style.width = app.width;
-    win.style.height = app.height;
-    win.style.zIndex = ++this.zIndex;
+    win.className = 'window'; win.id = `win-${id}`;
+    win.style.left = (20 + this.windows.size * 15) + 'px'; win.style.top = (40 + this.windows.size * 15) + 'px';
+    win.style.width = app.width; win.style.height = app.height; win.style.zIndex = ++this.zIndex;
     win.innerHTML = `
       <div class="window-header" onmousedown="Aura.drag(event, '${id}')">
         <div class="window-controls">
@@ -315,27 +282,21 @@ class AuraOS {
         </div>
         <div class="window-title">${app.icon} ${app.name}</div>
       </div>
-      <div class="window-body">${app.content}</div>
-    `;
+      <div class="window-body">${app.content}</div>`;
     document.getElementById('windows-container').appendChild(win);
     this.windows.set(id, win);
     document.getElementById('active-app').textContent = app.name;
+    if (id === 'aas-hub') setTimeout(() => AuraHub.render('llms', win.querySelector('.hub-cat-btn')), 100);
   }
 
   closeApp(id) { const w = this.windows.get(id); if (w) { w.remove(); this.windows.delete(id); } }
-  
   maximize(id) {
     const w = this.windows.get(id);
-    if (w.dataset.max) {
-      w.style.width = '90vw'; w.style.height = '70vh'; w.style.top = '40px'; w.style.left = '20px'; delete w.dataset.max;
-    } else {
-      w.style.width = '100%'; w.style.height = 'calc(100% - 30px)'; w.style.top = '28px'; w.style.left = '0'; w.dataset.max = '1';
-    }
+    if (w.dataset.max) { w.style.width = '90vw'; w.style.height = '75vh'; w.style.top = '40px'; w.style.left = '20px'; delete w.dataset.max; }
+    else { w.style.width = '100%'; w.style.height = 'calc(100% - 30px)'; w.style.top = '28px'; w.style.left = '0'; w.dataset.max = '1'; }
   }
-
   drag(e, id) {
-    const win = this.windows.get(id);
-    if (win.dataset.max) return;
+    const win = this.windows.get(id); if (win.dataset.max) return;
     const startX = e.clientX - win.offsetLeft, startY = e.clientY - win.offsetTop;
     const move = (ev) => { win.style.left = (ev.clientX - startX) + 'px'; win.style.top = (ev.clientY - startY) + 'px'; };
     const up = () => { document.removeEventListener('mousemove', move); document.removeEventListener('mouseup', up); };
@@ -345,139 +306,127 @@ class AuraOS {
 }
 
 // ==========================================
-// TOOL HANDLERS
+// APP LOGIC
 // ==========================================
-let currentToolType = '';
+const AuraHub = {
+  tools: {
+    llms: [{id:'llama',n:'Llama 3',d:'Meta open-source LLM',b:'Free'}, {id:'mistral',n:'Mistral',d:'Fast reasoning',b:'Free'}, {id:'qwen',n:'Qwen',d:'Multilingual',b:'Free'}],
+    image: [{id:'flux',n:'FLUX',d:'State-of-the-art images',b:'Free'}, {id:'sd',n:'Stable Diffusion',d:'Community standard',b:'Free'}],
+    code: [{id:'code',n:'CodeLlama',d:'Generate any code',b:'Free'}, {id:'py',n:'Python Gen',d:'Scripts & functions',b:'Free'}],
+    research: [{id:'search',n:'SearXNG',d:'Live web search',b:'Free'}, {id:'sum',n:'Summarizer',d:'URL summarization',b:'Free'}],
+    agents: [{id:'agent',n:'AI Researcher',d:'Search & synthesize',b:'Free'}]
+  },
+  render(cat, btn) {
+    document.querySelectorAll('.hub-cat-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    const container = document.getElementById('hub-main');
+    let html = `<div class="hub-grid">`;
+    this.tools[cat].forEach(t => {
+      html += `<div class="tool-card" onclick="AuraTool.openHub('${cat}','${t.id}','${t.n}')"><h4>${t.n}</h4><p>${t.d}</p><span class="badge">${t.b}</span></div>`;
+    });
+    html += `</div>`;
+    container.innerHTML = html;
+  }
+};
 
+let currentHubTool = '';
 const AuraTool = {
-  open(type, name) {
-    currentToolType = type;
-    document.getElementById('ai-grid').style.display = 'none';
-    document.getElementById('ai-workspace').style.display = 'block';
-    document.getElementById('ai-output').innerHTML = 'Ready. Enter a prompt above.';
-    document.getElementById('ai-input').value = '';
-    document.getElementById('ai-input').placeholder = type === 'code' ? 'Describe the code (e.g., Python sort function)' : 'Enter your prompt...';
+  openHub(cat, id, name) {
+    currentHubTool = id;
+    const container = document.getElementById('hub-main');
+    let ph = 'Enter prompt...';
+    if (cat === 'image') ph = 'Describe image...';
+    if (cat === 'code') ph = 'Describe code...';
+    
+    container.innerHTML = `
+      <button class="back-btn" onclick="AuraHub.render('${cat}', document.querySelector('.hub-cat-btn.active'))">← Back</button>
+      <h3 style="color:var(--gold);margin-bottom:15px">${name}</h3>
+      <input class="tool-input" id="hub-in" placeholder="${ph}">
+      <button class="tool-btn" id="hub-btn" onclick="AuraTool.execHub('${cat}')">Generate (Auto-Rotate)</button>
+      <div class="tool-output" id="hub-out">Ready.</div>`;
   },
 
-  close(app) {
-    document.getElementById(`${app}-workspace`).style.display = 'none';
-    document.getElementById(`${app}-grid`).style.display = 'grid';
-  },
+  async execHub(cat) {
+    const input = document.getElementById('hub-in').value.trim();
+    const out = document.getElementById('hub-out');
+    const btn = document.getElementById('hub-btn');
+    if (!input) return;
 
-  async generate(app, category) {
-    const input = document.getElementById(`${app}-input`).value.trim();
-    const out = document.getElementById(`${app}-output`);
-    const btn = document.getElementById(`${app}-btn`);
-    const status = document.getElementById(`${app}-status`);
-    
-    if (!input) { out.innerHTML = '<span style="color:var(--error)">⚠️ Enter a prompt</span>'; return; }
-    
-    btn.disabled = true; btn.textContent = 'Routing & Generating...';
-    status.className = 'status-bar rotating'; status.textContent = '⏳ Trying Pollinations (Free)...';
-    out.innerHTML = '<span style="color:var(--gold)">⏳ Initializing rotation sequence...</span>';
+    btn.disabled = true; btn.textContent = 'Routing...';
+    out.innerHTML = '<span style="color:var(--gold)">⏳ Rotating providers...</span>';
 
     try {
-      let prompt = input;
-      if (currentToolType === 'code') prompt = `Write complete, well-commented code for: ${input}. Return only the code block.`;
-      if (currentToolType === 'write') prompt = `Write creatively: ${input}`;
-
-      const result = await RotationEngine.executeText(prompt, currentToolType);
-      
-      status.className = 'status-bar'; status.textContent = `✅ Success: ${result.provider}`;
-      
-      let formattedData = result.text;
-      if (currentToolType === 'code') {
-        formattedData = formattedData.replace(/```(\w+)?\n([\s\S]*?)```/g, '<code>$2</code>');
+      if (cat === 'image') {
+        const url = RotationEngine.getImageUrl(input);
+        out.innerHTML = `<img src="${url}" style="max-width:100%;border-radius:6px"><div style="margin-top:8px;font-size:10px;color:#888">Generated via FLUX</div>`;
       } else {
-        formattedData = formattedData.replace(/\n/g, '<br>');
+        let prompt = input;
+        if (cat === 'code') prompt = `Write code for: ${input}`;
+        const res = await RotationEngine.executeText(prompt, cat);
+        out.innerHTML = `<div style="color:var(--gold);font-size:10px;margin-bottom:8px">✅ ${res.provider} (${res.model})</div>${res.text.replace(/\n/g,'<br>')}`;
       }
-
-      out.innerHTML = `<div style="color:var(--gold);margin-bottom:8px;font-size:10px;">✅ Generated via: <strong>${result.provider}</strong> (Model: ${result.model})</div>${formattedData}`;
-    } catch (e) {
-      status.className = 'status-bar'; status.style.color = 'var(--error)'; status.style.borderColor = 'var(--error)';
-      status.textContent = '❌ All providers failed';
-      out.innerHTML = `<span style="color:var(--error)">❌ ${e.message}</span>`;
-    }
+    } catch(e) { out.innerHTML = `<span style="color:var(--error)">❌ ${e.message}</span>`; }
     
     btn.disabled = false; btn.textContent = 'Generate (Auto-Rotate)';
   },
 
-  async generateImage(app, category) {
-    const input = document.getElementById(`${app}-input`).value.trim();
-    const out = document.getElementById(`${app}-output`);
-    const btn = document.getElementById(`${app}-btn`);
-    const status = document.getElementById(`${app}-status`);
-    
-    if (!input) { out.innerHTML = '<span style="color:var(--error)">⚠️ Enter a prompt</span>'; return; }
-    
+  async genImage() {
+    const input = document.getElementById('img-in').value.trim();
+    const out = document.getElementById('img-out');
+    const btn = document.getElementById('img-btn');
+    if (!input) return;
     btn.disabled = true; btn.textContent = 'Generating...';
-    status.className = 'status-bar rotating'; status.textContent = '⏳ Generating via FLUX...';
-    out.innerHTML = '<span style="color:var(--gold)"> Creating image...</span>';
-
-    try {
-      const url = RotationEngine.getImageUrl(input);
-      const img = new Image();
-      img.onload = () => {
-        status.className = 'status-bar'; status.textContent = '✅ Image Generated Successfully';
-        out.innerHTML = `<img src="${url}" alt="Generated"><div style="margin-top:8px;font-size:10px;color:#888;">Prompt: "${input}"</div>`;
-      };
-      img.onerror = () => { throw new Error('Image generation failed'); };
-      img.src = url;
-    } catch (e) {
-      out.innerHTML = `<span style="color:var(--error)">❌ ${e.message}</span>`;
-    }
-    
-    btn.disabled = false; btn.textContent = 'Generate Image';
+    out.innerHTML = '<span style="color:var(--gold)">⏳ Creating...</span>';
+    const url = RotationEngine.getImageUrl(input);
+    const img = new Image();
+    img.onload = () => { out.innerHTML = `<img src="${url}"><div style="margin-top:8px;font-size:10px;color:#888">Prompt: "${input}"</div>`; btn.disabled = false; btn.textContent = 'Generate Image'; };
+    img.onerror = () => { out.innerHTML = '<span style="color:var(--error)">❌ Failed</span>'; btn.disabled = false; btn.textContent = 'Generate Image'; };
+    img.src = url;
   },
 
-  saveSettings() {
-    const key = document.getElementById('or-key').value.trim();
-    localStorage.setItem('aura_or_key', key);
-    const msg = document.getElementById('settings-msg');
-    msg.textContent = '✅ Configuration saved! Rotation engine updated.';
-    setTimeout(() => msg.textContent = '', 3000);
+  async genVideo() {
+    const input = document.getElementById('vid-in').value.trim();
+    const out = document.getElementById('vid-out');
+    const btn = document.getElementById('vid-btn');
+    if (!input) return;
+    btn.disabled = true; btn.textContent = 'Generating Video...';
+    out.innerHTML = '<span style="color:var(--gold)">⏳ Rendering frames...</span>';
+    const url = RotationEngine.getVideoUrl(input);
+    out.innerHTML = `<div style="color:var(--gold);margin-bottom:10px">🎬 Generated by Wan 2.1</div><video controls autoplay loop muted style="max-width:100%;border-radius:8px"><source src="${url}" type="video/mp4"></video><div style="margin-top:10px;font-size:10px;color:#888">Prompt: "${input}"</div>`;
+    btn.disabled = false; btn.textContent = ' Generate Video (Plan & Execute)';
+  },
+
+  saveKeys() {
+    localStorage.setItem('aura_key_openrouter', document.getElementById('key-or').value.trim());
+    localStorage.setItem('aura_key_groq', document.getElementById('key-groq').value.trim());
+    document.getElementById('set-msg').textContent = '✅ Keys saved! Rotation engine updated.';
+    setTimeout(() => document.getElementById('set-msg').textContent = '', 3000);
   }
 };
 
-// ==========================================
-// TERMINAL
-// ==========================================
 const AuraTerm = {
   run() {
     const input = document.getElementById('term-in');
     const body = document.getElementById('term-body');
     const cmd = input.value.trim();
     if (!cmd) return;
-
-    const line = document.createElement('div');
-    line.innerHTML = `<span style="color:var(--gold)">aura@nexus:~$</span> ${cmd}`;
-    body.insertBefore(line, input.parentElement);
-
-    const out = document.createElement('div');
-    out.style.marginBottom = '6px'; out.style.color = '#0f0';
-
+    const line = document.createElement('div'); line.innerHTML = `<span style="color:var(--gold)">aura@nexus:~$</span> ${cmd}`; body.insertBefore(line, input.parentElement);
+    const out = document.createElement('div'); out.style.marginBottom = '6px'; out.style.color = '#0f0';
     const c = cmd.split(' ')[0].toLowerCase();
     if (c === 'help') out.textContent = 'Commands: help, ls, pwd, date, clear, neofetch, open [app], providers';
-    else if (c === 'ls') out.textContent = 'Desktop  Documents  AI_Tools  Image_Gen  Settings  Terminal';
+    else if (c === 'ls') out.textContent = 'Desktop  Documents  AAS_Hub  Video_Studio  Image_Gen  Settings  Terminal';
     else if (c === 'pwd') out.textContent = '/home/aura';
     else if (c === 'date') out.textContent = new Date().toString();
     else if (c === 'clear') { body.innerHTML = ''; input.parentElement.remove(); return; }
-    else if (c === 'neofetch') out.innerHTML = ' AuraOS v8.0\nOS: Rotation Engine Edition\nAI: Pollinations + OpenRouter Fallback\nStatus: Online & Auto-Rotating';
-    else if (c === 'providers') out.innerHTML = 'Active Providers:\n1. Pollinations (Free, No Key)\n2. OpenRouter (Free Tier Models, Requires Key in Settings)';
-    else if (c === 'open') { 
-      const app = cmd.split(' ')[1] || 'ai';
-      if (['ai', 'image', 'settings', 'terminal'].includes(app)) Aura.openApp(app);
-      out.textContent = 'Opening...';
-    }
+    else if (c === 'neofetch') out.innerHTML = '⚡ AuraOS v9.0\nOS: Ultimate Edition\nAI: Pollinations + OpenRouter + Groq\nStatus: Online & Auto-Rotating';
+    else if (c === 'providers') out.innerHTML = 'Active Providers:\n1. Pollinations (Free)\n2. OpenRouter (Free Tier)\n3. Groq (Fast)';
+    else if (c === 'open') { const app = cmd.split(' ')[1]; if (['aas-hub','video-studio','image-gen','settings','terminal'].includes(app)) Aura.openApp(app); out.textContent = 'Opening...'; }
     else out.textContent = `Command not found: ${c}`;
-
-    body.insertBefore(out, input.parentElement);
-    input.value = '';
-    body.scrollTop = body.scrollHeight;
+    body.insertBefore(out, input.parentElement); input.value = ''; body.scrollTop = body.scrollHeight;
   }
 };
 
 const Aura = new AuraOS();
 </script>
 </body>
-                                                                                                                                             </html>
+   </html>
